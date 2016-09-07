@@ -1,0 +1,7 @@
+G:\LocalGit\SubPubDemo\SubPubDemo\bin\Debug\SubPubDemo.exe
+G:\LocalGit\SubPubDemo\SubPubDemo\bin\Debug\SubPubDemo.pdb
+G:\LocalGit\SubPubDemo\SubPubDemo\bin\Debug\Common.dll
+G:\LocalGit\SubPubDemo\SubPubDemo\bin\Debug\Common.pdb
+G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.csprojResolveAssemblyReference.cache
+G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.exe
+G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.pdb
