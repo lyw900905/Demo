@@ -2,3 +2,5 @@ G:\LocalGit\SubPubDemo\Common\bin\Debug\Common.dll
 G:\LocalGit\SubPubDemo\Common\bin\Debug\Common.pdb
 G:\LocalGit\SubPubDemo\Common\obj\Debug\Common.dll
 G:\LocalGit\SubPubDemo\Common\obj\Debug\Common.pdb
+G:\LocalGit\SubPubDemo\Common\bin\Debug\MySql.Data.dll
+G:\LocalGit\SubPubDemo\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
