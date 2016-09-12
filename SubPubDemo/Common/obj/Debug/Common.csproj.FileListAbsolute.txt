@@ -2,3 +2,8 @@ G:\LocalGit\SubPubDemo\Common\bin\Debug\Common.dll
 G:\LocalGit\SubPubDemo\Common\bin\Debug\Common.pdb
 G:\LocalGit\SubPubDemo\Common\obj\Debug\Common.dll
 G:\LocalGit\SubPubDemo\Common\obj\Debug\Common.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\Common\bin\Debug\Common.dll
+F:\01 testcode\lywTest\Demo\SubPubDemo\Common\bin\Debug\Common.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+F:\01 testcode\lywTest\Demo\SubPubDemo\Common\obj\Debug\Common.dll
+F:\01 testcode\lywTest\Demo\SubPubDemo\Common\obj\Debug\Common.pdb

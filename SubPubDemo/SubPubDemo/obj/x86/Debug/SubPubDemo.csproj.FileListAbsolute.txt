@@ -5,3 +5,10 @@ G:\LocalGit\SubPubDemo\SubPubDemo\bin\Debug\Common.pdb
 G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.csprojResolveAssemblyReference.cache
 G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.exe
 G:\LocalGit\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.exe
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\bin\Debug\SubPubDemo.exe
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\bin\Debug\SubPubDemo.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\bin\Debug\Common.dll
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\bin\Debug\Common.pdb
+F:\01 testcode\lywTest\Demo\SubPubDemo\SubPubDemo\obj\x86\Debug\SubPubDemo.csprojResolveAssemblyReference.cache

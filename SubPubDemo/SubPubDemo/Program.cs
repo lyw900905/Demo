@@ -1,10 +1,13 @@
-﻿using System;
+﻿// todo：此处缺少文件头信息
+using System;
+//// todo:没有移除多余无用using
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace SubPubDemo
 {
+    // todo:接口定义一般情况下应该不是在common项目里面
     using Common.Interface;
 
     class Program

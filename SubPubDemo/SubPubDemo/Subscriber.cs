@@ -1,4 +1,6 @@
-﻿using System;
+﻿// todo：此处缺少文件头信息
+//// todo:没有移除多余无用using
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,7 @@ namespace SubPubDemo
         {
             set
             {
+                //todo: 你这样在属性里面注册注销会误导人
                 value.SubscribeEvent += Show;
             }
         }
@@ -28,7 +31,7 @@ namespace SubPubDemo
         /// <summary>
         /// 移出订阅
         /// </summary>
-        public ISubscribe RemobeSubscribe
+        public ISubscribe RemobeSubscribe ////todo: 属性拼写错误，应该是remove,而且你这样使用属性，个人认为是在滥用
         {
             set
             {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// todo：此处缺少文件头信息
+using System;
+//// todo:没有移除多余无用using
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,7 @@ namespace SubPubDemo
     /// </summary>
     public class Publisher : IPublish
     {
+        //todo:注意代码注释，还有字段命名，属性和非静态字段不能使用下划线开头，注意命名规范
         private string _publisherName;
 
         private event PublishHandle publishEvent;
