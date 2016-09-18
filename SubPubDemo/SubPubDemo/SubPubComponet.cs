@@ -1,4 +1,5 @@
-﻿//using System;
+﻿
+//using System;
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
@@ -14,7 +15,9 @@
 //    {
 //        private string _subName;
 
+
 //        //event SubscribeHandle subscribeEvent;
+
 
 //        //event SubscribeHandle ISubscribe.SubscribeEvent
 //        //{
@@ -22,13 +25,16 @@
 //        //    remove { subscribeEvent -= value; }
 //        //}
 
+
 //        public PublishHandle PublishEvent;
+
 
 //        event PublishHandle IPublish.PublishEvent
 //        {
 //            add { PublishEvent += value; }
 //            remove { PublishEvent -= value; }
 //        }
+
 
 //        /// <summary>
 //        /// 构造函数
@@ -40,6 +46,7 @@
 //            //PublishEvent += new PublishHandle(Notify);
 //        }
 
+       
 //        /// <summary>
 //        /// 通知方法
 //        /// </summary>

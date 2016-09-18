@@ -1,0 +1,11 @@
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.csprojResolveAssemblyReference.cache
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.Form1.resources
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.Properties.Resources.resources
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.csproj.GenerateResource.Cache
+G:\LocalGit\SubPubDemo\TestHttp\bin\Debug\TestHttp.exe
+G:\LocalGit\SubPubDemo\TestHttp\bin\Debug\TestHttp.pdb
+G:\LocalGit\SubPubDemo\TestHttp\bin\Debug\Common.dll
+G:\LocalGit\SubPubDemo\TestHttp\bin\Debug\MySql.Data.dll
+G:\LocalGit\SubPubDemo\TestHttp\bin\Debug\Common.pdb
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.exe
+G:\LocalGit\SubPubDemo\TestHttp\obj\x86\Debug\TestHttp.pdb

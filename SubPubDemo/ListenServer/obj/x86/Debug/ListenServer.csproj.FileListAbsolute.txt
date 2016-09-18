@@ -1,0 +1,11 @@
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.Form1.resources
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.Properties.Resources.resources
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.csproj.GenerateResource.Cache
+G:\LocalGit\SubPubDemo\ListenServer\bin\Debug\ListenServer.exe
+G:\LocalGit\SubPubDemo\ListenServer\bin\Debug\ListenServer.pdb
+G:\LocalGit\SubPubDemo\ListenServer\bin\Debug\Common.dll
+G:\LocalGit\SubPubDemo\ListenServer\bin\Debug\MySql.Data.dll
+G:\LocalGit\SubPubDemo\ListenServer\bin\Debug\Common.pdb
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.csprojResolveAssemblyReference.cache
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.exe
+G:\LocalGit\SubPubDemo\ListenServer\obj\x86\Debug\ListenServer.pdb

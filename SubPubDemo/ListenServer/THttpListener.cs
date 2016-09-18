@@ -35,7 +35,7 @@ namespace ListenServer
         }
 
         public delegate void ResponseEventArges(HttpListenerContext ctx);
-        public event ResponseEventArges ResponseEvent;
+        //public event ResponseEventArges ResponseEvent;
         AsyncCallback ac = null;
 
         /// <summary>

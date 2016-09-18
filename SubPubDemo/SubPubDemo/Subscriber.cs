@@ -18,6 +18,9 @@ namespace SubPubDemo
         /// </summary>
         private string subsName;
 
+        /// <summary>
+        /// 订阅者
+        /// </summary>
         private IPublish subscriber;
 
         ///// <summary>
@@ -49,6 +52,7 @@ namespace SubPubDemo
         /// <param name="sub">订阅内容</param>
         public Subscriber(string name, IPublish sub)
         {
+
             this.subsName = name;
             this.subscriber = sub;
         }
