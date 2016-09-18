@@ -30,33 +30,44 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.lstViewInfo = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(54, 46);
+            this.button1.Location = new System.Drawing.Point(54, 21);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(73, 23);
+            this.button1.Size = new System.Drawing.Size(59, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "连接";
+            this.button1.Text = "添加";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(54, 104);
+            this.button2.Location = new System.Drawing.Point(54, 64);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(59, 23);
             this.button2.TabIndex = 1;
-            this.button2.Text = "添加";
+            this.button2.Text = "查询";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // lstViewInfo
+            // 
+            this.lstViewInfo.Location = new System.Drawing.Point(54, 119);
+            this.lstViewInfo.Name = "lstViewInfo";
+            this.lstViewInfo.Size = new System.Drawing.Size(213, 203);
+            this.lstViewInfo.TabIndex = 3;
+            this.lstViewInfo.UseCompatibleStateImageBehavior = false;
+            this.lstViewInfo.View = System.Windows.Forms.View.Details;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(384, 344);
+            this.Controls.Add(this.lstViewInfo);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -69,6 +80,7 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ListView lstViewInfo;
     }
 }
 

@@ -6,14 +6,12 @@
 *********************************************************************************/
 using System;
 
-
 namespace SubPubDemo
 {
     class Program
     {
         static void Main(string[] args)
         { 
-
             //// 新建两个订阅器
             //SubPubComponet subPubCompont1 = new SubPubComponet("订阅器1");
             //SubPubComponet subPubCompont2 = new SubPubComponet("订阅器2");

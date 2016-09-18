@@ -19,7 +19,7 @@ namespace Common.Helper
 
         static MySQLHelper()
         {
-            constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=TestDemoDb";
+            constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
         }
 
         /// <summary>

@@ -6,13 +6,9 @@
 *********************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
-
 
 namespace ListenServer
 {
@@ -36,6 +32,7 @@ namespace ListenServer
 
         public delegate void ResponseEventArges(HttpListenerContext ctx);
         //public event ResponseEventArges ResponseEvent;
+        Encoding encoding = Encoding.UTF8;
         AsyncCallback ac = null;
 
         /// <summary>
@@ -79,7 +76,7 @@ namespace ListenServer
                 {
                     Stream stream = request.InputStream;
                     string json = string.Empty;
-                    StreamReader streamReader = new StreamReader(stream, request.ContentEncoding);
+                    StreamReader streamReader = new StreamReader(stream, encoding);
                     json = streamReader.ReadToEnd();
                     UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
                     UserInfoDAL.AddUserInfo(userInfo);
