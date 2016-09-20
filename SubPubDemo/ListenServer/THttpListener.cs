@@ -97,6 +97,7 @@ namespace ListenServer
 
                     UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
                     UserInfoDAL.AddUserInfo(userInfo);
+
                 }
 
                 List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
@@ -104,7 +105,8 @@ namespace ListenServer
                 String responseString = JSonHelper.Serialize(userList);
                 byte[] buffer = Encoding.UTF8.GetBytes(responseString);
                 Int32 cout = 0;
-                response.ContentLength64 = buffer.Length;
+
+                response.ContentLength64 = buffer.Length; 
                 System.IO.Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 response.OutputStream.Close();

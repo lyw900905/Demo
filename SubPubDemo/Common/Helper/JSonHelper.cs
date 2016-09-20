@@ -23,6 +23,7 @@ namespace Common.Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
+
         public static String Serialize<T>(T obj)
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
@@ -38,6 +39,7 @@ namespace Common.Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
         /// <returns></returns>
+
         public static T Deserialize<T>(String json)
         {
             MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));

@@ -28,6 +28,7 @@ namespace Common.Helper
         /// </summary>
         static MySQLHelper()
         {
+
             //constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
             constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
@@ -58,8 +59,10 @@ namespace Common.Helper
         /// <param name="cmdText">sql语句</param>
         /// <param name="cmdParas">参数信息</param>
         /// <returns>返回影响结果</returns>
+
         public static Int32 ExcuteNonQuery(String cmdText, MySqlParameter[] cmdParas)
         {
+
             Int32 count = 0;
 
             using (MySqlConnection mycon = new MySqlConnection(constr))
@@ -76,6 +79,7 @@ namespace Common.Helper
 
             return count;
         }
+
 
         /// <summary>
         /// 执行不带参数sql语句，返回DataTable数据信息
@@ -105,6 +109,7 @@ namespace Common.Helper
         /// <returns>结果的首行首列的object值</returns>
         public static object ExecuteScalar(String cmdText, MySqlParameter[] cmdParas)
         {
+
             Object obj = null;
 
             using (MySqlConnection mycon = new MySqlConnection(constr))

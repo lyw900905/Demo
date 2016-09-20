@@ -38,7 +38,7 @@ namespace SubPubDemo
         /// 发布通知事件
         /// </summary>
         public event PublishHandle publishEvent;
-
+      
         /// <summary>
         /// 通知
         /// </summary>
