@@ -18,9 +18,9 @@ namespace ListenServer
 
     public class THttpListener
     {
-        HttpListener listener;
+        HttpListener listener; //todo:不管是public还是private，都必须加上对应的修饰符
 
-        public THttpListener(string[] prefixes)
+        public THttpListener(string[] prefixes) //todo:注意代码注释和变量命名
         {
             listener = new HttpListener();
 
@@ -30,9 +30,9 @@ namespace ListenServer
             }
         }
 
-        public delegate void ResponseEventArges(HttpListenerContext ctx);
+        public delegate void ResponseEventArges(HttpListenerContext ctx); //todo:注意代码注释
         //public event ResponseEventArges ResponseEvent;
-        Encoding encoding = Encoding.UTF8;
+        Encoding encoding = Encoding.UTF8; //todo:不管是public还是private，都必须加上对应的修饰符
         AsyncCallback ac = null;
 
         /// <summary>
@@ -78,16 +78,17 @@ namespace ListenServer
                     string json = string.Empty;
                     StreamReader streamReader = new StreamReader(stream, encoding);
                     json = streamReader.ReadToEnd();
-                    UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
-                    UserInfoDAL.AddUserInfo(userInfo);
+                    UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);//todo:没有对数据的有效性进行验证
+                    UserInfoDAL.AddUserInfo(userInfo); //todo:用户积分是一个变化的过程，不是说用户积分只会提交一次
                 }
 
-                List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
+                //todo:没有按照需求处理，需求是：按照积分排序，只取指定数量的用户积分信息给前端
+                List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo(); //todo:每次都从数据库查询，如果用户量稍微有点多就会导致数据库压力过大
 
                 // 收到连接请求回传
                 string responseString = JSonHelper.Serialize(userList);
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                response.ContentLength64 = buffer.Length;
+                response.ContentLength64 = buffer.Length; 
                 System.IO.Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 response.OutputStream.Close();

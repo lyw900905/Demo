@@ -22,9 +22,9 @@ namespace Common.Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static string Serialize<T>(T obj)
+        public static string Serialize<T>(T obj)//todo:这边规范要求普通类型不能用小写的，string=>String int=>Int32,Int64
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType()); //todo:你可以检查一下这个序列化结果，实际上是有很多垃圾信息的。可以再查资料确认有没有其他序列化方案
             MemoryStream ms = new MemoryStream();
             serializer.WriteObject(ms, obj);
             string retVal = Encoding.UTF8.GetString(ms.ToArray());

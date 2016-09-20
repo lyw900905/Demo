@@ -13,11 +13,11 @@ namespace SubPubDemo
     /// </summary>
     public class Publisher : IPublish
     {
-        private string pubContent;
+        private string pubContent; //todo: 缺少代码注释
         /// <summary>
         /// 发布内容
         /// </summary>
-        public string PubContent
+        public string PubContent //todo:summary和上面的字段之间缺少一个空行
         {
             get
             {
@@ -29,8 +29,10 @@ namespace SubPubDemo
             }
         }
 
+        //todo：缺少代码注释
         public event PublishHandle publishEvent;
 
+        //todo:无用代码要删除，保证代码整洁
         //event PublishHandle IPublish.PublishEvent
         //{
         //    add { publishEvent += value; }
@@ -78,7 +80,7 @@ namespace SubPubDemo
         /// </summary>
         public void Notify()
         {
-            publishEvent();
+            publishEvent(); //todo:此处没有判断publishEvent是否为null，在无事件注册时，为null
         }
     }
 }

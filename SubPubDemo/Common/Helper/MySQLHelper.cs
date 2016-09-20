@@ -19,7 +19,7 @@ namespace Common.Helper
 
         static MySQLHelper()
         {
-            constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
+            constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";//todo:数据库连接字符串应该写在配置文件中
         }
 
         /// <summary>

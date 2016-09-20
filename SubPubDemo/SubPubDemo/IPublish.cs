@@ -23,6 +23,6 @@ namespace SubPubDemo
         /// <summary>
         /// 发布内容
         /// </summary>
-        string PubContent { get; set; }
+        string PubContent { get; set; }//todo:此属性有和作用？是不是多余的，而且使用此属性也是有问题的
     }
 }
