@@ -16,41 +16,19 @@ namespace SubPubDemo
         /// <summary>
         /// 名称
         /// </summary>
-        private string subsName;
+        private String subsName;
 
         /// <summary>
         /// 订阅者
         /// </summary>
         private IPublish subscriber;
 
-        ///// <summary>
-        ///// 添加订阅
-        ///// </summary>
-        //public ISubscribe AddSubscribe
-        //{
-        //    set
-        //    {
-        //        value.SubscribeEvent += Show;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 移出订阅
-        ///// </summary>
-        //public ISubscribe RemobeSubscribe
-        //{
-        //    set
-        //    {
-        //        value.SubscribeEvent -= Show;
-        //    }
-        //}
-
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="name">名称</param>
         /// <param name="sub">订阅内容</param>
-        public Subscriber(string name, IPublish sub)
+        public Subscriber(String name, IPublish sub)
         {
             this.subsName = name;
             this.subscriber = sub;
@@ -60,9 +38,9 @@ namespace SubPubDemo
         /// 显示
         /// </summary>
         /// <param name="str">显示内容</param>
-        public void Show()
+        public void Show(String content)
         {
-            Console.WriteLine(string.Format("我是{0},我收到订阅的消息是{1}", subsName, subscriber.PubContent));
+            Console.WriteLine(String.Format("我是{0},我收到订阅的消息是{1}", subsName, content));
         }
     }
 }

@@ -15,21 +15,30 @@ namespace TestHttp
 {
     class TestHttpClient
     {
-        private static string _strUrl = "http://127.0.0.1/";
+        /// <summary>
+        /// 请求监听地址
+        /// </summary>
+        private static String _strUrl = "http://127.0.0.1:2020/";
+
         private static AutoResetEvent m_object = new AutoResetEvent(false);
-        static string sendStr = string.Empty;
-        static HttpWebRequest httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
-        static HttpWebResponse httpResp;
-        //static Encoding encoding = Encoding.UTF8;
+
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        private static String sendStr = String.Empty;
+
+        private static HttpWebRequest httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
+
+        private static HttpWebResponse httpResp;
 
         /// <summary>
         /// 发送信息
         /// </summary>
         /// <param name="str"></param>
-        public static Stream SendMsg(string str)
+        public static Stream SendMsg(String str)
         {
             sendStr = str;
-            httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
+            httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);         
             httpRequ.Method = "POST";
             httpRequ.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpRequ);
             m_object.WaitOne();
@@ -46,7 +55,6 @@ namespace TestHttp
         {
             httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
             httpRequ.Method = "GET";
-            //httpRequ.BeginGetResponse(new AsyncCallback(ResponseCallBack), httpRequ);
             httpResp = (HttpWebResponse)httpRequ.GetResponse();
             Stream res = null;
             res = httpResp.GetResponseStream();
@@ -65,18 +73,6 @@ namespace TestHttp
             obj_Stream.Write(send_Msg_Arr, 0, send_Msg_Arr.Length);
             m_object.Set();
             obj_Stream.Close();
-        }
-
-        /// <summary>
-        /// 接收数据回调函数(未使用)
-        /// </summary>
-        /// <param name="asy"></param>
-        private static void ResponseCallBack(IAsyncResult asy)
-        {
-            HttpWebRequest objReq = (HttpWebRequest)asy.AsyncState;
-            httpResp = (HttpWebResponse)objReq.EndGetResponse(asy);
-            Stream res = null;
-            res = httpResp.GetResponseStream();
         }
     }
 }

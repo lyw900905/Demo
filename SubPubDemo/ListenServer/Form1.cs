@@ -19,7 +19,7 @@ namespace ListenServer
 
         private void btn_Open_Click(object sender, EventArgs e)
         {
-            string[] strUrl = new string[] { "http://127.0.0.1/" };
+            string[] strUrl = new string[] { "http://127.0.0.1:2020/" };
             _httpListener = new THttpListener(strUrl);
             _httpListener.Start();
         }

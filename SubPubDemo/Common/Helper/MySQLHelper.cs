@@ -5,21 +5,31 @@
 ** Ver.:  V1.0.0
 *********************************************************************************/
 
+using System;
+using System.Data;
+using System.Configuration;
+
 namespace Common.Helper
 {
     using MySql.Data.MySqlClient;
-    using System.Data;
 
     /// <summary>
     /// 数据库操作帮助类
     /// </summary>
     public class MySQLHelper
     {
-        static readonly string constr = string.Empty;
+        /// <summary>
+        /// 连接字符串
+        /// </summary>
+        private static readonly String constr = String.Empty;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         static MySQLHelper()
         {
-            constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
+            //constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
+            constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         /// <summary>
@@ -27,7 +37,7 @@ namespace Common.Helper
         /// </summary>
         /// <param name="cmdText">sql语句</param>
         /// <returns>返回影响结果</returns>
-        public static int ExcuteNonQuery(string cmdText)
+        public static Int32 ExcuteNonQuery(String cmdText)
         {
             int count = 0;
 
@@ -48,9 +58,9 @@ namespace Common.Helper
         /// <param name="cmdText">sql语句</param>
         /// <param name="cmdParas">参数信息</param>
         /// <returns>返回影响结果</returns>
-        public static int ExcuteNonQuery(string cmdText, MySqlParameter[] cmdParas)
+        public static Int32 ExcuteNonQuery(String cmdText, MySqlParameter[] cmdParas)
         {
-            int count = 0;
+            Int32 count = 0;
 
             using (MySqlConnection mycon = new MySqlConnection(constr))
             {
@@ -66,13 +76,13 @@ namespace Common.Helper
 
             return count;
         }
-        
+
         /// <summary>
         /// 执行不带参数sql语句，返回DataTable数据信息
         /// </summary>
         /// <param name="cmdText">sql指令</param>
         /// <returns>DataTable表数据信息</returns>
-        public static DataTable GetDataTable(string cmdText)
+        public static DataTable GetDataTable(String cmdText)
         {
             DataTable db = new DataTable();
 
@@ -93,9 +103,9 @@ namespace Common.Helper
         /// <param name="cmdText">sql语句</param>
         /// <param name="cmdParas">命令参数</param>
         /// <returns>结果的首行首列的object值</returns>
-        public static object ExecuteScalar(string cmdText, MySqlParameter[] cmdParas)
+        public static object ExecuteScalar(String cmdText, MySqlParameter[] cmdParas)
         {
-            object obj = null;
+            Object obj = null;
 
             using (MySqlConnection mycon = new MySqlConnection(constr))
             {

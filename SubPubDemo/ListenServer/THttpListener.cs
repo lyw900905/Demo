@@ -15,12 +15,25 @@ namespace ListenServer
     using Common.Entity;
     using Common.Helper;
     using Common.DAL;
+    using Common.Servers;
 
     public class THttpListener
     {
-        HttpListener listener;
+        /// <summary>
+        /// 监听
+        /// </summary>
+        private HttpListener listener;
 
-        public THttpListener(string[] prefixes)
+        /// <summary>
+        /// 异步调用方法
+        /// </summary>
+        private AsyncCallback ac = null;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="prefixes">监听路径字符串</param>
+        public THttpListener(String[] prefixes)
         {
             listener = new HttpListener();
 
@@ -29,11 +42,6 @@ namespace ListenServer
                 listener.Prefixes.Add(item);
             }
         }
-
-        public delegate void ResponseEventArges(HttpListenerContext ctx);
-        //public event ResponseEventArges ResponseEvent;
-        Encoding encoding = Encoding.UTF8;
-        AsyncCallback ac = null;
 
         /// <summary>
         /// 开始监听服务
@@ -59,6 +67,11 @@ namespace ListenServer
         }
 
         /// <summary>
+        /// 请求信息字典列表
+        /// </summary>
+        private Dictionary<IPEndPoint, HttpListenerContext> lstListener = new Dictionary<IPEndPoint, HttpListenerContext>();
+
+        /// <summary>
         /// 收到监听请求回调
         /// </summary>
         /// <param name="ia">异步结束状态</param>
@@ -67,35 +80,64 @@ namespace ListenServer
             if (ia.IsCompleted)
             {
                 HttpListenerContext ctx = listener.EndGetContext(ia);
-                ctx.Response.StatusCode = 200;
 
+                ctx.Response.StatusCode = 200;
                 HttpListenerRequest request = ctx.Request;
+
+                //if (!lstListener.ContainsKey(ctx.Request.RemoteEndPoint))
+                //{
+                //    lstListener[ctx.Request.RemoteEndPoint] = ctx;
+                //}
+
                 HttpListenerResponse response = ctx.Response;
 
                 if (request.HttpMethod == "POST")
                 {
                     Stream stream = request.InputStream;
-                    string json = string.Empty;
-                    StreamReader streamReader = new StreamReader(stream, encoding);
-                    json = streamReader.ReadToEnd();
-                    UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
+
+                    UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
                     UserInfoDAL.AddUserInfo(userInfo);
                 }
 
                 List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
-
                 // 收到连接请求回传
-                string responseString = JSonHelper.Serialize(userList);
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                String responseString = JSonHelper.Serialize(userList);
+                byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+                Int32 cout = 0;
                 response.ContentLength64 = buffer.Length;
                 System.IO.Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 response.OutputStream.Close();
                 output.Close();
+                Console.WriteLine("传输次数：" + cout++);
+
+                //SendToClient();
             }
+
             listener.BeginGetContext(ac, null);
         }
+
+        /// <summary>
+        /// 测试发送数据到客户端端
+        /// </summary>
+        public void SendToClient()
+        {
+            List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
+            // 收到连接请求回传
+            String responseString = JSonHelper.Serialize(userList);
+            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+            Int32 cout = 0;
+
+            foreach (var lst in lstListener)
+            {
+                lst.Value.Response.ContentLength64 = buffer.Length;
+                System.IO.Stream output = lst.Value.Response.OutputStream;
+                output.Write(buffer, 0, buffer.Length);
+                lst.Value.Response.OutputStream.Close();
+                output.Close();
+                Console.WriteLine("传输次数：" + cout++);
+            }
+
+        }
     }
-
-
 }

@@ -4,11 +4,15 @@
 ** desc： 发布接口
 ** Ver.:  V1.0.0
 *********************************************************************************/
+using System;
 
 namespace SubPubDemo
 {
-    // 定义发布事件
-    public delegate void PublishHandle();
+    /// <summary>
+    ///  定义发布委托
+    /// </summary>
+    /// <param name="content">内容</param>
+    public delegate void PublishHandle(String content);
 
     /// <summary>
     ///  定义发布接口
@@ -19,10 +23,5 @@ namespace SubPubDemo
         /// 更新
         /// </summary>
         void Notify();
-        
-        /// <summary>
-        /// 发布内容
-        /// </summary>
-        string PubContent { get; set; }
     }
 }

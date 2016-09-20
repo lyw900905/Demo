@@ -24,7 +24,7 @@ namespace Common.DAL
         public static List<UserInfo> QueryAllUserInfo()
         {
             List<UserInfo> userList = new List<UserInfo>();
-            string sqlstr = "select * from UserInfo";
+            string sqlstr = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
             try
             {
                 DataTable dt = MySQLHelper.GetDataTable(sqlstr);
@@ -56,7 +56,7 @@ namespace Common.DAL
         /// </summary>
         /// <param name="userInfo">用户实体信息</param>
         /// <returns>返回结果id</returns>
-        public static int AddUserInfo(UserInfo userInfo)
+        public static Int32 AddUserInfo(UserInfo userInfo)
         {
             object obj = null;
             try
@@ -74,6 +74,7 @@ namespace Common.DAL
                 {
                     userInfo.UserId = Convert.ToInt32(obj);
                 }
+
                 return userInfo.UserId;
             }
             catch (Exception ex)

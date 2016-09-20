@@ -47,7 +47,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publisher.cs" />
-    <Compile Include="SubPubComponet.cs" />
     <Compile Include="Subscriber.cs" />
   </ItemGroup>
   <ItemGroup>

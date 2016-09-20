@@ -9,6 +9,7 @@ namespace TestHttp
 {
     using Common.Entity;
     using Common.Helper;
+    using Common.Servers;
 
     public partial class Form1 : Form
     {
@@ -21,7 +22,6 @@ namespace TestHttp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //TestHttpClient.ConnectHttpServer();
             Stream stream = TestHttpClient.SendMsg(TestInfoJson());
         }
 
@@ -39,10 +39,7 @@ namespace TestHttp
             Stream stream = null;
             stream = TestHttpClient.GetMsg();
 
-            StreamReader strReader = new StreamReader(stream, encoding);
-            string json = strReader.ReadToEnd();
-            var ls = JSonHelper.Deserialize<List<UserInfo>>(json);
-            UpdateListUser(ls);
+            UpdateListUser(AnalysisService.AnalysisJsonStream(stream));
         }
 
         /// <summary>
