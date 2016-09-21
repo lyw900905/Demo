@@ -14,7 +14,11 @@ namespace Common.Servers
 {
     using Common.Entity;
     using Common.Helper;
+    using Newtonsoft.Json;
 
+    /// <summary>
+    /// 解析服务类
+    /// </summary>
     public class AnalysisService
     {
         /// <summary>
@@ -32,7 +36,8 @@ namespace Common.Servers
             List<UserInfo> lstInfo = new List<UserInfo>();
             StreamReader strReader = new StreamReader(stream, encoding);
             String json = strReader.ReadToEnd();
-            lstInfo = JSonHelper.Deserialize<List<UserInfo>>(json);
+            //lstInfo = JSonHelper.Deserialize<List<UserInfo>>(json);
+            lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
             return lstInfo;
         }
 
@@ -46,7 +51,8 @@ namespace Common.Servers
             String json = String.Empty;
             StreamReader streamReader = new StreamReader(stream, encoding);
             json = streamReader.ReadToEnd();
-            UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
+            //UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
+            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
 
             return userInfo;
         }

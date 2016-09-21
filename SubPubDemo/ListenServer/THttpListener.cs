@@ -13,9 +13,9 @@ using System.IO;
 namespace ListenServer
 {
     using Common.Entity;
-    using Common.Helper;
     using Common.DAL;
     using Common.Servers;
+    using Newtonsoft.Json;
 
     public class THttpListener
     {
@@ -83,7 +83,7 @@ namespace ListenServer
 
                 ctx.Response.StatusCode = 200;
                 HttpListenerRequest request = ctx.Request;
-
+                //var add=  request.UserHostAddress;
                 //if (!lstListener.ContainsKey(ctx.Request.RemoteEndPoint))
                 //{
                 //    lstListener[ctx.Request.RemoteEndPoint] = ctx;
@@ -94,15 +94,14 @@ namespace ListenServer
                 if (request.HttpMethod == "POST")
                 {
                     Stream stream = request.InputStream;
-
                     UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
                     UserInfoDAL.AddUserInfo(userInfo);
-
                 }
 
                 List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
                 // 收到连接请求回传
-                String responseString = JSonHelper.Serialize(userList);
+                //String responseString = JSonHelper.Serialize(userList);
+                String responseString = JsonConvert.SerializeObject(userList);
                 byte[] buffer = Encoding.UTF8.GetBytes(responseString);
                 Int32 cout = 0;
 
@@ -126,7 +125,8 @@ namespace ListenServer
         {
             List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
             // 收到连接请求回传
-            String responseString = JSonHelper.Serialize(userList);
+            //String responseString = JSonHelper.Serialize(userList);
+            String responseString = JsonConvert.SerializeObject(userList);
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
             Int32 cout = 0;
 

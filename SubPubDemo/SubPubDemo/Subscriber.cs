@@ -19,19 +19,13 @@ namespace SubPubDemo
         private String subsName;
 
         /// <summary>
-        /// 订阅者
-        /// </summary>
-        private IPublish subscriber;
-
-        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="name">名称</param>
         /// <param name="sub">订阅内容</param>
-        public Subscriber(String name, IPublish sub)
+        public Subscriber(String name)
         {
             this.subsName = name;
-            this.subscriber = sub;
         }
 
         /// <summary>

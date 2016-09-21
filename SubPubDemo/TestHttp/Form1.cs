@@ -10,11 +10,10 @@ namespace TestHttp
     using Common.Entity;
     using Common.Helper;
     using Common.Servers;
+    using Newtonsoft.Json;
 
     public partial class Form1 : Form
     {
-        Encoding encoding = Encoding.UTF8;
-
         public Form1()
         {
             InitializeComponent();
@@ -22,18 +21,10 @@ namespace TestHttp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Stream stream = TestHttpClient.SendMsg(TestInfoJson());
+            String teststr = TestDataService.CreateTestData();
+            Stream stream = TestHttpClient.SendMsg(teststr);
         }
-
-        string TestInfoJson() 
-        {
-            Common.Entity.UserInfo userInfo = new Common.Entity.UserInfo();
-            userInfo.UserName = "测试用户名";
-            userInfo.UserIntegral = 50;
-
-            return Common.Helper.JSonHelper.Serialize(userInfo);
-        }
-
+      
         private void button2_Click(object sender, EventArgs e)
         {
             Stream stream = null;

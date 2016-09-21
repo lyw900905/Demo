@@ -15,42 +15,47 @@ namespace SubPubDemo
     public class Publisher : IPublish
     {
         /// <summary>
-        /// 内容
+        /// 定义事件
         /// </summary>
-        private String pubContent;
+        private event Action<String> publishEvent;
 
         /// <summary>
-        /// 发布内容
+        /// 订阅方法
         /// </summary>
-        public String PubContent
+        /// <param name="dealAction">委托方法</param>
+        public void Subscriber(Action<String> dealAction)
         {
-            get
+            if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
             {
-                return pubContent;
+                foreach (var item in publishEvent.GetInvocationList())
+                {
+                    if (item.Equals(dealAction))
+                    {
+                        return;
+                    }
+                }
             }
-            set
-            {
-                pubContent = value;
-            }
+            publishEvent += dealAction;
         }
 
         /// <summary>
-        /// 发布通知事件
+        /// 取消订阅
         /// </summary>
-        public event PublishHandle publishEvent;
-      
+        /// <param name="dealAction"></param>
+        public void DelSubscriber(Action<String> dealAction) 
+        {
+            publishEvent -= dealAction;
+        }
+
         /// <summary>
-        /// 通知
+        /// 发布信息
         /// </summary>
-        public void Notify()
+        /// <param name="msg">信息内容</param>
+        public void Publish(String msg)
         {
             if (publishEvent != null)
             {
-                publishEvent(PubContent);
-            }
-            else
-            {
-                Console.WriteLine("无事件注册");
+                publishEvent(msg);
             }
         }
     }

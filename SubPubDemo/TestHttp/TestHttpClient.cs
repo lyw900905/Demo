@@ -27,8 +27,14 @@ namespace TestHttp
         /// </summary>
         private static String sendStr = String.Empty;
 
+        /// <summary>
+        /// 请求
+        /// </summary>
         private static HttpWebRequest httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
 
+        /// <summary>
+        /// 应答
+        /// </summary>
         private static HttpWebResponse httpResp;
 
         /// <summary>

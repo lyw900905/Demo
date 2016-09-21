@@ -9,19 +9,20 @@ using System;
 namespace SubPubDemo
 {
     /// <summary>
-    ///  定义发布委托
-    /// </summary>
-    /// <param name="content">内容</param>
-    public delegate void PublishHandle(String content);
-
-    /// <summary>
     ///  定义发布接口
     /// </summary>
     public interface IPublish
     {
         /// <summary>
-        /// 更新
+        /// 订阅方法
         /// </summary>
-        void Notify();
+        /// <param name="dealAction">委托方法</param>
+        void Subscriber(Action<String> dealAction);
+
+        /// <summary>
+        /// 发布
+        /// </summary>
+        /// <param name="msg">信息</param>
+        void Publish(String msg);
     }
 }
