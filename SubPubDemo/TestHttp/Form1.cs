@@ -22,48 +22,55 @@ namespace TestHttp
         private void button1_Click(object sender, EventArgs e)
         {
             String teststr = TestDataService.CreateTestData();
-            Stream stream = TestHttpClient.SendMsg(teststr);
+            TestHttpClient.Instance.SendMsg(teststr);
+            TestHttpClient.Instance.Subscriber(UpdateListUser);
         }
-      
+
         private void button2_Click(object sender, EventArgs e)
         {
-            Stream stream = null;
-            stream = TestHttpClient.GetMsg();
-
-            UpdateListUser(AnalysisService.AnalysisJsonStream(stream));
+            TestHttpClient.Instance.Subscriber(UpdateListUser);
+            TestHttpClient.Instance.StartConnet();
         }
 
         /// <summary>
         /// 更新界面显示
         /// </summary>
         /// <param name="lstUser"></param>
-        private void UpdateListUser(List<UserInfo> lstUser) 
+        private void UpdateListUser(List<UserInfo> lstUser)
         {
-            lstUser = lstUser.OrderByDescending(o => o.UserIntegral).ToList();
-            lstViewInfo.Items.Clear();
-            lstViewInfo.Columns.Clear();
-            lstViewInfo.GridLines = false;
-            lstViewInfo.FullRowSelect = true;
-            lstViewInfo.View = View.Details;
-            lstViewInfo.MultiSelect = false;
-            lstViewInfo.HeaderStyle = ColumnHeaderStyle.None;
-
-            lstViewInfo.Columns.Add("名次",40);
-            lstViewInfo.Columns.Add("用户名",100);
-            lstViewInfo.Columns.Add("积分",50);
-            int count = 0;
-            foreach (var item in lstUser)
+            this.Invoke(new Action(delegate
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Clear();
-                count++;
-                lvi.Text = count.ToString();
-                lvi.SubItems.Add(item.UserName);
-                lvi.SubItems.Add(item.UserIntegral.ToString());
+                lstUser = lstUser.OrderByDescending(o => o.UserIntegral).ToList();
+                lstViewInfo.Items.Clear();
+                lstViewInfo.Columns.Clear();
+                lstViewInfo.GridLines = false;
+                lstViewInfo.FullRowSelect = true;
+                lstViewInfo.View = View.Details;
+                lstViewInfo.MultiSelect = false;
+                lstViewInfo.HeaderStyle = ColumnHeaderStyle.None;
 
-                lstViewInfo.Items.Add(lvi);
+                lstViewInfo.Columns.Add("名次", 40);
+                lstViewInfo.Columns.Add("用户名", 160);
+                lstViewInfo.Columns.Add("积分", 50);
+                int count = 0;
+                foreach (var item in lstUser)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.SubItems.Clear();
+                    count++;
+                    lvi.Text = count.ToString();
+                    lvi.SubItems.Add(item.UserName);
+                    lvi.SubItems.Add(item.UserIntegral.ToString());
 
-            }
+                    lstViewInfo.Items.Add(lvi);
+
+                }
+            }));
+        }
+
+        private void btn_listener_Click(object sender, EventArgs e)
+        {
+            TestHttpClient.Instance.StartClientListener();
         }
     }
 }

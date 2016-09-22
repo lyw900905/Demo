@@ -33,11 +33,11 @@
             // 
             // btn_Open
             // 
-            this.btn_Open.Location = new System.Drawing.Point(83, 53);
+            this.btn_Open.Location = new System.Drawing.Point(41, 49);
             this.btn_Open.Name = "btn_Open";
-            this.btn_Open.Size = new System.Drawing.Size(75, 23);
+            this.btn_Open.Size = new System.Drawing.Size(74, 23);
             this.btn_Open.TabIndex = 0;
-            this.btn_Open.Text = "开启";
+            this.btn_Open.Text = "开启监听";
             this.btn_Open.UseVisualStyleBackColor = true;
             this.btn_Open.Click += new System.EventHandler(this.btn_Open_Click);
             // 
@@ -45,7 +45,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(409, 262);
+            this.ClientSize = new System.Drawing.Size(282, 243);
             this.Controls.Add(this.btn_Open);
             this.Name = "Form1";
             this.Text = "Form1";

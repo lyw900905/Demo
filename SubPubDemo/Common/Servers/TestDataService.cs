@@ -24,8 +24,9 @@ namespace Common.Servers
         {
             UserInfo userInfo = new UserInfo();
             Random rd = new Random();
-            Int32 num = rd.Next(1, 100);
-            userInfo.UserName = "测试用户名" + num;
+            Int32 num = rd.Next(1, 150);
+            String str = Guid.NewGuid().ToString("N");
+            userInfo.UserName = "测试用户名" + str.Substring(0, 4);
             userInfo.UserIntegral = num;
 
             return JsonConvert.SerializeObject(userInfo);
