@@ -17,7 +17,7 @@ namespace SubPubDemo
         /// 订阅方法
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        void Subscriber(Action<String> dealAction);
+        void Subscriber(Action<String> dealAction); //todo:注意命名。。。。。 Subscriber是名词：订阅者 ，这儿应该是Subscribe
 
         /// <summary>
         /// 发布

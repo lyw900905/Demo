@@ -29,7 +29,7 @@ namespace ListenServer
         /// <summary>
         /// 单例操作锁
         /// </summary>
-        private static Object _lock = new object();
+        private static Object _lock = new object(); //todo:不要随意命名变量，变量名称要能够体现出含义，不要随意加下划线之类的
 
         /// <summary>
         /// 私有构造函数
@@ -80,7 +80,7 @@ namespace ListenServer
         /// </summary>
         private HttpWebRequest httpRequ;
 
-        private AutoResetEvent m_object = new AutoResetEvent(false);
+        private AutoResetEvent m_object = new AutoResetEvent(false); //todo:注意各种规范！！！
 
         /// <summary>
         /// 异步调用方法
@@ -96,9 +96,9 @@ namespace ListenServer
             {
                 serverlistener = new HttpListener();
                 String serverStrUrl = ConfigurationManager.AppSettings["ServerListenerUrl"];
-                serverlistener.Prefixes.Add(serverStrUrl);
+                serverlistener.Prefixes.Add(serverStrUrl); 
 
-                if (!serverlistener.IsListening)
+                if (!serverlistener.IsListening) //todo:就在前面new了一个对象，还添加了serverStrUrl。这儿判断是否处于监听还有用么？
                 {
                     serverlistener.Start();
                     ac = new AsyncCallback(GetContextAsynCallback);
@@ -120,12 +120,12 @@ namespace ListenServer
             serverlistener.Stop();
         }
 
-        private Boolean isUpdate = false;
+        private Boolean isUpdate = false; //todo:注意代码格式，缺少summary头，和下面函数之间少一个空行，字段定义和属性定义应该各在一个代码段里，不要随意放置字段位置
         /// <summary>
         /// 收到监听请求回调
         /// </summary>
         /// <param name="ia">异步结束状态</param>
-        private void GetContextAsynCallback(IAsyncResult ia)
+        private void GetContextAsynCallback(IAsyncResult ia) //todo:代码实现缺少必要注释
         {
             if (ia.IsCompleted)
             {
@@ -139,14 +139,14 @@ namespace ListenServer
                 if (request.HttpMethod == "POST")
                 {
                     Stream stream = request.InputStream;
-                    UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
+                    UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream); //todo:如果stream中没有数据。你这儿不就异常了？
                     UserInfoDAL.AddUserInfo(userInfo);
                     isUpdate = true;
                 }
 
                 String responseString = String.Empty;
                 #region 通过客户端请求更新
-                if (request.HttpMethod == "GET" && isUpdate)
+                if (request.HttpMethod == "GET" && isUpdate) //todo:region和实现代码之间需要一个空行
                 {
                     //isUpdate = false;
                     List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
@@ -157,7 +157,7 @@ namespace ListenServer
                 response.ContentLength64 = buffer.Length;
                 Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
-                response.OutputStream.Close();
+                response.OutputStream.Close(); //todo: 注意资源操作时，要保证必然能够正常释放和关闭资源。你这儿直接这么写是要出问题的
                 output.Close();
 
                 #endregion
@@ -185,14 +185,14 @@ namespace ListenServer
         /// 发送信息
         /// </summary>
         /// <param name="str"></param>
-        private void SendMsg(String str)
+        private void SendMsg(String str) //todo:注意代码注释
         {
             try
             {
                 sendStr = str;
                 httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
                 httpRequ.Method = "POST";
-                httpRequ.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpRequ);
+                httpRequ.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpRequ); //todo:你这儿用异步，下面又等待，那你干嘛用异步？
                 m_object.WaitOne();
                 httpRequ.GetResponse();
             }

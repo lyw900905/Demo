@@ -17,7 +17,7 @@ namespace TestHttp
     using Common.Entity;
     using Common.Servers;
 
-    class TestHttpClient
+    class TestHttpClient //todo:注意规范。。class必须要有访问修饰符，class必须要有summary头
     {
         /// <summary>
         /// 静态实例字段
@@ -53,7 +53,7 @@ namespace TestHttp
                             instance = new TestHttpClient();
                         }
                     }
-                }
+                }//todo:注意按照规范写代码
                 return instance;
             }
         }
@@ -78,9 +78,9 @@ namespace TestHttp
         /// </summary>
         private String clientStrUrl = "http://127.0.0.1:3030/";
 
-        private static AutoResetEvent m_object = new AutoResetEvent(false);
+        private static AutoResetEvent m_object = new AutoResetEvent(false);//todo:
 
-        private System.Timers.Timer connectTimer;
+        private System.Timers.Timer connectTimer;//todo:
 
         /// <summary>
         /// 发送数据
@@ -90,12 +90,12 @@ namespace TestHttp
         /// <summary>
         /// 请求
         /// </summary>
-        private HttpWebRequest httpRequ;
+        private HttpWebRequest httpRequ;//todo:不要随便写缩写，常见的可以缩写，但是像这种本来就没缩写的，不要写缩写
 
         /// <summary>
         /// 应答
         /// </summary>
-        private HttpWebResponse httpResp;
+        private HttpWebResponse httpResp;//todo:不要随便写缩写，常见的可以缩写，但是像这种本来就没缩写的，不要写缩写
 
         /// <summary>
         /// 定义事件
@@ -105,8 +105,8 @@ namespace TestHttp
         /// <summary>
         /// 发送信息
         /// </summary>
-        /// <param name="str"></param>
-        public void SendMsg(String str)
+        /// <param name="str"></param>//todo:
+        public void SendMsg(String str)//todo:
         {
             try
             {
@@ -128,7 +128,7 @@ namespace TestHttp
         /// <summary>
         /// 开始连接查询
         /// </summary>
-        public void StartConnet()
+        public void StartConnet()//todo:
         {
             connectTimer = new System.Timers.Timer();
             connectTimer.Interval = 2 * 1000;
@@ -241,14 +241,14 @@ namespace TestHttp
                     Stream stream = request.InputStream;
                     List<UserInfo> userInfo = AnalysisService.AnalysisJsonStream(stream);
                     OnUpdate(userInfo);
-                }
+                }//todo:
                 String res = "Ok";
                 Byte[] buffer = Encoding.UTF8.GetBytes(res);
                 response.ContentLength64 = buffer.Length;
                 System.IO.Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
-                response.OutputStream.Close();
-                output.Close();
+                response.OutputStream.Close();//todo:
+                output.Close();//todo:
             }
 
             clientListener.BeginGetContext(ac, null);
@@ -269,7 +269,7 @@ namespace TestHttp
         /// <summary>
         /// 定时查询服务器监听timer
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender"></param>//todo:
         /// <param name="e"></param>
         private void connectTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {

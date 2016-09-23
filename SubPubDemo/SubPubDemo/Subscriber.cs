@@ -22,7 +22,7 @@ namespace SubPubDemo
         /// 构造函数
         /// </summary>
         /// <param name="name">名称</param>
-        /// <param name="sub">订阅内容</param>
+        /// <param name="sub">订阅内容</param>//todo:注意参数注释
         public Subscriber(String name)
         {
             this.subsName = name;
@@ -31,7 +31,7 @@ namespace SubPubDemo
         /// <summary>
         /// 显示
         /// </summary>
-        /// <param name="str">显示内容</param>
+        /// <param name="str">显示内容</param>//todo:注意参数注释
         public void Show(String content)
         {
             Console.WriteLine(String.Format("我是{0},我收到订阅的消息是{1}", subsName, content));

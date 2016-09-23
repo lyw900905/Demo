@@ -34,7 +34,7 @@ namespace SubPubDemo
                         return;
                     }
                 }
-            }
+            } //todo:花括号和下面的代码有一个空行
             publishEvent += dealAction;
         }
 
