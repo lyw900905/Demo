@@ -11,12 +11,16 @@ namespace ListenServer
 {
     public partial class Form1 : Form
     {
-        THttpListener _httpListener;
         public Form1()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 开启服务器监听
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_Open_Click(object sender, EventArgs e)
         {
             THttpListener.Instance.StartServerListener();

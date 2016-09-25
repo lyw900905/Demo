@@ -17,7 +17,10 @@ namespace TestHttp
     using Common.Entity;
     using Common.Servers;
 
-    class TestHttpClient //todo:注意规范。。class必须要有访问修饰符，class必须要有summary头
+    /// <summary>
+    /// 客户端调用服务类
+    /// </summary>
+    public class TestHttpClient
     {
         /// <summary>
         /// 静态实例字段
@@ -27,7 +30,7 @@ namespace TestHttp
         /// <summary>
         /// 单例操作锁
         /// </summary>
-        private static Object _lock = new object();
+        private static Object instanceLock = new object();
 
         /// <summary>
         /// 私有构造函数
@@ -46,14 +49,15 @@ namespace TestHttp
             {
                 if (instance == null)
                 {
-                    lock (_lock)
+                    lock (instanceLock)
                     {
                         if (instance == null)
                         {
                             instance = new TestHttpClient();
                         }
                     }
-                }//todo:注意按照规范写代码
+                }
+
                 return instance;
             }
         }
@@ -78,9 +82,10 @@ namespace TestHttp
         /// </summary>
         private String clientStrUrl = "http://127.0.0.1:3030/";
 
-        private static AutoResetEvent m_object = new AutoResetEvent(false);//todo:
-
-        private System.Timers.Timer connectTimer;//todo:
+        /// <summary>
+        /// 连接服务器更新timer
+        /// </summary>
+        private System.Timers.Timer connectTimer;
 
         /// <summary>
         /// 发送数据
@@ -90,12 +95,12 @@ namespace TestHttp
         /// <summary>
         /// 请求
         /// </summary>
-        private HttpWebRequest httpRequ;//todo:不要随便写缩写，常见的可以缩写，但是像这种本来就没缩写的，不要写缩写
+        private HttpWebRequest httpWebRequest;
 
         /// <summary>
         /// 应答
         /// </summary>
-        private HttpWebResponse httpResp;//todo:不要随便写缩写，常见的可以缩写，但是像这种本来就没缩写的，不要写缩写
+        private HttpWebResponse httpWebResponse;
 
         /// <summary>
         /// 定义事件
@@ -105,19 +110,15 @@ namespace TestHttp
         /// <summary>
         /// 发送信息
         /// </summary>
-        /// <param name="str"></param>//todo:
-        public void SendMsg(String str)//todo:
+        /// <param name="str">要发送的数据字符串</param>
+        public void SendMsg(String str)
         {
             try
             {
                 sendStr = str;
-                httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
-                httpRequ.Method = "POST";
-                httpRequ.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpRequ);
-                m_object.WaitOne();
-                httpResp = (HttpWebResponse)httpRequ.GetResponse();
-                httpResp.GetResponseStream();
-                //return myStream;
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(_strUrl);
+                httpWebRequest.Method = "POST";
+                httpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpWebRequest);
             }
             catch (Exception ex)
             {
@@ -126,29 +127,30 @@ namespace TestHttp
         }
 
         /// <summary>
-        /// 开始连接查询
+        /// 开始连接查询timer
         /// </summary>
-        public void StartConnet()//todo:
+        public void StartConnet()
         {
+            // 查询服务器更新数据timer初始化及参数设置
             connectTimer = new System.Timers.Timer();
             connectTimer.Interval = 2 * 1000;
             connectTimer.AutoReset = false;
-            connectTimer.Elapsed += new System.Timers.ElapsedEventHandler(connectTimer_Elapsed);
+            connectTimer.Elapsed -= connectTimer_Elapsed;
+            connectTimer.Elapsed +=connectTimer_Elapsed;
             connectTimer.Start();
         }
 
         /// <summary>
         /// 获取信息
         /// </summary>
-        /// <returns></returns>
+        /// <returns>返回响应数据流Stream</returns>
         private Stream GetMsg()
         {
-            httpRequ = (HttpWebRequest)WebRequest.Create(_strUrl);
-            httpRequ.Method = "GET";
-            //httpRequ.BeginGetResponse(new AsyncCallback(ResponseCallBack), httpRequ);
-            httpResp = (HttpWebResponse)httpRequ.GetResponse();
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(_strUrl);
+            httpWebRequest.Method = "GET";
+            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             Stream res = null;
-            res = httpResp.GetResponseStream();
+            res = httpWebResponse.GetResponseStream();
             return res;
         }
 
@@ -157,16 +159,13 @@ namespace TestHttp
         /// </summary>
         public void StartClientListener()
         {
+            // 通过开启客户端互相监听来更新客户端数据
             clientListener = new HttpListener();
             clientListener.Prefixes.Add(clientStrUrl);
-
-            if (!clientListener.IsListening)
-            {
-                clientListener.Start();
-                ac = new AsyncCallback(GetContextAsynCallback);
-                clientListener.BeginGetContext(ac, null);
-                Console.WriteLine(DateTime.Now.ToString());
-            }
+            clientListener.Start();
+            ac = new AsyncCallback(GetContextAsynCallback);
+            clientListener.BeginGetContext(ac, null);
+            Console.WriteLine(DateTime.Now.ToString());
         }
 
         /// <summary>
@@ -193,35 +192,26 @@ namespace TestHttp
                     }
                 }
             }
+
             publishEvent += dealAction;
         }
 
         /// <summary>
         /// 发送数据回调函数
         /// </summary>
-        /// <param name="asy"></param>
+        /// <param name="asy">异步结束状态</param>
         private void PostCallBack(IAsyncResult asy)
         {
-            HttpWebRequest objReq = (HttpWebRequest)asy.AsyncState;
-            Stream obj_Stream = objReq.EndGetRequestStream(asy);
-            Byte[] send_Msg_Arr = Encoding.UTF8.GetBytes(sendStr);
-            obj_Stream.Write(send_Msg_Arr, 0, send_Msg_Arr.Length);
-            m_object.Set();
-            obj_Stream.Close();
+            httpWebRequest = (HttpWebRequest)asy.AsyncState;
+            using (Stream stream = httpWebRequest.EndGetRequestStream(asy))
+            {
+                Byte[] sendMsg = Encoding.UTF8.GetBytes(sendStr);
+                stream.Write(sendMsg, 0, sendMsg.Length);
+                stream.Close();
+            }
+
+            httpWebRequest.GetResponse();
         }
-
-        //private void ResponseCallBack(IAsyncResult asy)
-        //{
-        //    HttpWebRequest objReq = (HttpWebRequest)asy.AsyncState;
-        //    httpResp = (HttpWebResponse)objReq.EndGetResponse(asy);
-        //    Stream res = null;
-        //    res = httpResp.GetResponseStream();
-        //    Byte[] sb = Encoding.UTF8.GetBytes(clientStrUrl);
-        //    res.Write(sb, 0, sb.Length);
-
-        //    m_object.Set();
-        //    res.Close();
-        //}
 
         /// <summary>
         /// 收到监听请求回调
@@ -229,26 +219,38 @@ namespace TestHttp
         /// <param name="ia">异步结束状态</param>
         private void GetContextAsynCallback(IAsyncResult ia)
         {
+            // 收到服务器请求时回调处理
+            // 如果是推送数据就更新客户端界面显示
             if (ia.IsCompleted)
             {
                 HttpListenerContext ctx = clientListener.EndGetContext(ia);
-
                 ctx.Response.StatusCode = 200;
                 HttpListenerRequest request = ctx.Request;
                 HttpListenerResponse response = ctx.Response;
+
+                // 判断推送数据
                 if (request.HttpMethod == "POST")
                 {
                     Stream stream = request.InputStream;
                     List<UserInfo> userInfo = AnalysisService.AnalysisJsonStream(stream);
-                    OnUpdate(userInfo);
-                }//todo:
+
+                    // 数据判断
+                    if (userInfo != null && userInfo.Count > 0)
+                    {
+                        OnUpdate(userInfo);
+                    }
+                }
+
                 String res = "Ok";
                 Byte[] buffer = Encoding.UTF8.GetBytes(res);
                 response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                response.OutputStream.Close();//todo:
-                output.Close();//todo:
+
+                using (Stream output = response.OutputStream)
+                {
+                    output.Write(buffer, 0, buffer.Length);
+                    response.OutputStream.Close();
+                    output.Close();
+                }
             }
 
             clientListener.BeginGetContext(ac, null);
@@ -269,14 +271,17 @@ namespace TestHttp
         /// <summary>
         /// 定时查询服务器监听timer
         /// </summary>
-        /// <param name="sender"></param>//todo:
-        /// <param name="e"></param>
+        /// <param name="sender">timer对象</param>
+        /// <param name="e">事件参数信息</param>
         private void connectTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            // 每2秒从服务器获取更新数据并推送至界面显示
             try
             {
                 Stream res = GetMsg();
                 List<UserInfo> lstuser = AnalysisService.AnalysisJsonStream(res);
+
+                // 判断解析后数据是否为空
                 if (lstuser != null && lstuser.Count > 0)
                 {
                     OnUpdate(lstuser);

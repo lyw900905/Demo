@@ -21,8 +21,8 @@ namespace SubPubDemo
             //news.PubContent = "发布第一条新闻";
             //news.Notify();
 
-            news.Subscriber(au1.Show);
-            news.Subscriber(au2.Show);
+            news.Subscribe(au1.Show);
+            news.Subscribe(au2.Show);
             news.Publish("发布第一条消息");
 
             news.DelSubscriber(au2.Show);

@@ -19,6 +19,11 @@ namespace TestHttp
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 添加测试数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             String teststr = TestDataService.CreateTestData();
@@ -26,6 +31,11 @@ namespace TestHttp
             TestHttpClient.Instance.Subscriber(UpdateListUser);
         }
 
+        /// <summary>
+        /// 开启客户端timer查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             TestHttpClient.Instance.Subscriber(UpdateListUser);
@@ -35,7 +45,7 @@ namespace TestHttp
         /// <summary>
         /// 更新界面显示
         /// </summary>
-        /// <param name="lstUser"></param>
+        /// <param name="lstUser">信息列表</param>
         private void UpdateListUser(List<UserInfo> lstUser)
         {
             this.Invoke(new Action(delegate
@@ -65,9 +75,15 @@ namespace TestHttp
                     lstViewInfo.Items.Add(lvi);
 
                 }
+
             }));
         }
 
+        /// <summary>
+        /// 开启客户端监听测试
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_listener_Click(object sender, EventArgs e)
         {
             TestHttpClient.Instance.StartClientListener();

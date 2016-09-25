@@ -23,7 +23,7 @@ namespace SubPubDemo
         /// 订阅方法
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        public void Subscriber(Action<String> dealAction)
+        public void Subscribe(Action<String> dealAction)
         {
             if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
             {
@@ -34,14 +34,15 @@ namespace SubPubDemo
                         return;
                     }
                 }
-            } //todo:花括号和下面的代码有一个空行
+            } 
+
             publishEvent += dealAction;
         }
 
         /// <summary>
         /// 取消订阅
         /// </summary>
-        /// <param name="dealAction"></param>
+        /// <param name="dealAction">委托方法</param>
         public void DelSubscriber(Action<String> dealAction) 
         {
             publishEvent -= dealAction;

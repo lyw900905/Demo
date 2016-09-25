@@ -30,15 +30,22 @@ namespace Common.Servers
         /// 解析Json数据流,返回用户list
         /// </summary>
         /// <param name="stream">json数据流</param>
-        /// <returns>用户列表</returns>
+        /// <returns>用户列表,异常返回Null</returns>
         public static List<UserInfo> AnalysisJsonStream(Stream stream)
         {
-            List<UserInfo> lstInfo = new List<UserInfo>();
-            StreamReader strReader = new StreamReader(stream, encoding);
-            String json = strReader.ReadToEnd();
-            //lstInfo = JSonHelper.Deserialize<List<UserInfo>>(json);
-            lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
-            return lstInfo;
+            try
+            {
+                List<UserInfo> lstInfo = new List<UserInfo>();
+                StreamReader strReader = new StreamReader(stream, encoding);
+                String json = strReader.ReadToEnd();
+                lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+                return lstInfo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("解析json数据流错误异常：" + ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -48,13 +55,20 @@ namespace Common.Servers
         /// <returns>用户信息</returns>
         public static UserInfo AnalysisJsonStre(Stream stream)
         {
-            String json = String.Empty;
-            StreamReader streamReader = new StreamReader(stream, encoding);
-            json = streamReader.ReadToEnd();
-            //UserInfo userInfo = JSonHelper.Deserialize<UserInfo>(json);
-            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
+            try
+            {
+                String json = String.Empty;
+                StreamReader streamReader = new StreamReader(stream, encoding);
+                json = streamReader.ReadToEnd();
+                UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
+                return userInfo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("解析json数据流错误异常：" + ex);
+                return null;
+            }
 
-            return userInfo;
         }
     }
 }

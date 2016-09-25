@@ -15,6 +15,9 @@ namespace Common.DAL
     using Common.Helper;
     using MySql.Data.MySqlClient;
 
+    /// <summary>
+    /// 用户操作数据库服务类
+    /// </summary>
     public static class UserInfoDAL
     {
         /// <summary>
