@@ -1,13 +1,15 @@
-﻿/********************************************************************************
-** auth： lyw
-** date： 2016-09-12
-** desc： 用户操作类
-** Ver.:  V1.0.0
-*********************************************************************************/
+﻿//***********************************************************************************
+// 文件名称：UserInfoDAL.cs
+// 功能描述：用户操作数据库服务类
+// 数据表：userinfo
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Collections.Generic;
 
 namespace Common.DAL
 {
@@ -27,14 +29,16 @@ namespace Common.DAL
         public static List<UserInfo> QueryAllUserInfo()
         {
             List<UserInfo> userList = new List<UserInfo>();
-            string sqlstr = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
+            String sqlstr = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
             try
             {
+                // 数据获取
                 DataTable dt = MySQLHelper.GetDataTable(sqlstr);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
+                        // 用户信息设置
                         UserInfo info = new UserInfo
                         {
                             UserId = Convert.ToInt32(row["UserId"]),
@@ -48,7 +52,8 @@ namespace Common.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                Console.WriteLine("查询所有用户信息异常：" + ex);
+                return null;
             }
 
             return userList;
@@ -61,11 +66,11 @@ namespace Common.DAL
         /// <returns>返回结果id</returns>
         public static Int32 AddUserInfo(UserInfo userInfo)
         {
-            object obj = null;
+            Object obj = null;
             try
             {
-                string sqlstr = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
-
+                // Sql指令组织
+                String sqlstr = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
                 MySqlParameter[] para = new MySqlParameter[]
                 {
                     new MySqlParameter("@UserName",userInfo.UserName),

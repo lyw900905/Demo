@@ -1,16 +1,19 @@
-﻿/********************************************************************************
-** auth： lyw
-** date： 2016-09-12
-** desc： httpserver
-** Ver.:  V1.0.0
-*********************************************************************************/
+﻿//***********************************************************************************
+// 文件名称：THttpListener.cs
+// 功能描述：服务器监听类
+// 数据表：
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
+
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.IO;
 using System.Threading;
 using System.Configuration;
+using System.Collections.Generic;
 
 namespace ListenServer
 {
@@ -27,12 +30,64 @@ namespace ListenServer
         /// <summary>
         /// 静态实例字段
         /// </summary>
-        private static THttpListener instance;
+        private static THttpListener mInstance;
 
         /// <summary>
         /// 单例操作锁
         /// </summary>
-        private static Object instanceLock = new object();
+        private static Object mInstanceLock = new Object();
+
+        /// <summary>
+        /// 静态实例属性
+        /// </summary>
+        public static THttpListener Instance
+        {
+            get
+            {
+                if (mInstance == null)
+                {
+                    lock (mInstanceLock)
+                    {
+                        if (mInstance == null)
+                        {
+                            mInstance = new THttpListener();
+                        }
+                    }
+                }
+
+                return mInstance;
+            }
+        }
+
+        /// <summary>
+        /// 监听
+        /// </summary>
+        private HttpListener mServerListener;
+
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        private String mSendStr = String.Empty;
+
+        /// <summary>
+        /// 请求监听地址
+        /// </summary>
+        private static String mStrUrl = "http://127.0.0.1:3030/";
+
+        /// <summary>
+        /// 请求
+        /// </summary>
+        private HttpWebRequest mHttpWebRequest;
+
+        /// <summary>
+        /// 异步调用方法
+        /// </summary>
+        private AsyncCallback mCallBack = null;
+
+        /// <summary>
+        /// 是否更新
+        /// </summary>
+        private Boolean mIsUpdate = false;
 
         /// <summary>
         /// 私有构造函数
@@ -43,56 +98,13 @@ namespace ListenServer
         }
 
         /// <summary>
-        /// 静态实例属性
+        /// 开启监听服务线程
         /// </summary>
-        public static THttpListener Instance
+        public void StartServerThread()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (instanceLock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new THttpListener();
-                        }
-                    }
-                }
-
-                return instance;
-            }
+            Thread th = new Thread(new ThreadStart(StartServerListener));
+            th.Start();
         }
-
-        /// <summary>
-        /// 监听
-        /// </summary>
-        private HttpListener serverlistener;
-
-        /// <summary>
-        /// 发送数据
-        /// </summary>
-        private String sendStr = String.Empty;
-
-        /// <summary>
-        /// 请求监听地址
-        /// </summary>
-        private static String _strUrl = "http://127.0.0.1:3030/";
-
-        /// <summary>
-        /// 请求
-        /// </summary>
-        private HttpWebRequest httpWebRequest;
-
-        /// <summary>
-        /// 异步调用方法
-        /// </summary>
-        private AsyncCallback ac = null;
-
-        /// <summary>
-        /// 是否更新
-        /// </summary>
-        private Boolean isUpdate = false;
 
         /// <summary>
         /// 开始监听服务
@@ -101,12 +113,13 @@ namespace ListenServer
         {
             try
             {
-                serverlistener = new HttpListener();
+                mServerListener = new HttpListener();
                 String serverStrUrl = ConfigurationManager.AppSettings["ServerListenerUrl"];
-                serverlistener.Prefixes.Add(serverStrUrl);
-                serverlistener.Start();
-                ac = new AsyncCallback(GetContextAsynCallback);
-                serverlistener.BeginGetContext(ac, null);
+                mServerListener.Prefixes.Add(serverStrUrl);
+                mServerListener.Start();
+                mCallBack = new AsyncCallback(GetContextAsynCallback);
+                mServerListener.BeginGetContext(mCallBack, null);
+
                 Console.WriteLine("开启服务器监听：" + DateTime.Now);
             }
             catch (Exception ex)
@@ -120,7 +133,10 @@ namespace ListenServer
         /// </summary>
         public void StopServerListener()
         {
-            serverlistener.Stop();
+            if (mServerListener != null && mServerListener.IsListening)
+            {
+                mServerListener.Stop();
+            }
         }
 
         /// <summary>
@@ -137,30 +153,30 @@ namespace ListenServer
             {
                 if (ia.IsCompleted)
                 {
-                    HttpListenerContext ctx = serverlistener.EndGetContext(ia);
+                    HttpListenerContext ctx = mServerListener.EndGetContext(ia);
                     ctx.Response.StatusCode = 200;
                     HttpListenerRequest request = ctx.Request;
                     HttpListenerResponse response = ctx.Response;
+                    String responseString = String.Empty;
 
                     // 请求类型判断
                     if (request.HttpMethod == "POST")
                     {
+                        // 解析数据
                         Stream stream = request.InputStream;
                         UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
 
                         // 数据判断
                         if (userInfo != null)
                         {
-                            UserInfoDAL.AddUserInfo(userInfo);
-                            isUpdate = true;
+                            UserInfoDAL.AddUserInfo(userInfo);//// 更新数据库
+                            mIsUpdate = true;
                         }
                     }
 
-                    String responseString = String.Empty;
-
                     #region 通过客户端请求更新
 
-                    if (request.HttpMethod == "GET" && isUpdate)
+                    if (request.HttpMethod == "GET" && mIsUpdate)
                     {
                         List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
 
@@ -172,10 +188,10 @@ namespace ListenServer
                     byte[] buffer = Encoding.UTF8.GetBytes(responseString);
                     response.ContentLength64 = buffer.Length;
 
+                    // 写入输出数据
                     using (Stream output = response.OutputStream)
                     {
                         output.Write(buffer, 0, buffer.Length);
-                        response.OutputStream.Close();
                         output.Close();
                     }
 
@@ -189,7 +205,7 @@ namespace ListenServer
                     #endregion
                 }
 
-                serverlistener.BeginGetContext(ac, null);
+                mServerListener.BeginGetContext(mCallBack, null);
             }
             catch (Exception ex)
             {
@@ -206,22 +222,23 @@ namespace ListenServer
             // 客户端互相监听时，更新客户端数据
             List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
             String responseString = JsonConvert.SerializeObject(userList);
-            SendMsg(responseString);
+
+            SendRequestMsg(responseString);
         }
 
         /// <summary>
         /// 发送信息
         /// </summary>
         /// <param name="str">String型：要发送的数据</param>
-        private void SendMsg(String str)
+        private void SendRequestMsg(String str)
         {
-            // 发送数据到客户端监听地址
+            // 通过客户端开启监听，服务器发送数据到客户端监听地址
             try
             {
-                sendStr = str;
-                httpWebRequest = (HttpWebRequest)WebRequest.Create(_strUrl);
-                httpWebRequest.Method = "POST";
-                httpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpWebRequest);
+                mSendStr = str;
+                mHttpWebRequest = (HttpWebRequest)WebRequest.Create(mStrUrl);
+                mHttpWebRequest.Method = "POST";
+                mHttpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), mHttpWebRequest);
             }
             catch (Exception ex)
             {
@@ -235,15 +252,18 @@ namespace ListenServer
         /// <param name="asy">异步结束状态</param>
         private void PostCallBack(IAsyncResult asy)
         {
-            httpWebRequest = (HttpWebRequest)asy.AsyncState;
-            using (Stream stream = httpWebRequest.EndGetRequestStream(asy))
+            mHttpWebRequest = (HttpWebRequest)asy.AsyncState;
+
+            Byte[] sendMsg = Encoding.UTF8.GetBytes(mSendStr);//// 发送数据流
+
+            // 写入向监听推送的数据
+            using (Stream stream = mHttpWebRequest.EndGetRequestStream(asy))
             {
-                byte[] sendMsg = Encoding.UTF8.GetBytes(sendStr);
                 stream.Write(sendMsg, 0, sendMsg.Length);
                 stream.Close();
             }
 
-            httpWebRequest.GetResponse();
+            mHttpWebRequest.GetResponse();
         }
     }
 }

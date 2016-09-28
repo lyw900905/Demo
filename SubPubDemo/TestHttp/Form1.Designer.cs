@@ -32,6 +32,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.lstViewInfo = new System.Windows.Forms.ListView();
             this.btn_listener = new System.Windows.Forms.Button();
+            this.btn_Stop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -65,7 +66,7 @@
             // 
             // btn_listener
             // 
-            this.btn_listener.Location = new System.Drawing.Point(278, 21);
+            this.btn_listener.Location = new System.Drawing.Point(278, 12);
             this.btn_listener.Name = "btn_listener";
             this.btn_listener.Size = new System.Drawing.Size(57, 23);
             this.btn_listener.TabIndex = 4;
@@ -73,11 +74,22 @@
             this.btn_listener.UseVisualStyleBackColor = true;
             this.btn_listener.Click += new System.EventHandler(this.btn_listener_Click);
             // 
+            // btn_Stop
+            // 
+            this.btn_Stop.Location = new System.Drawing.Point(278, 42);
+            this.btn_Stop.Name = "btn_Stop";
+            this.btn_Stop.Size = new System.Drawing.Size(57, 23);
+            this.btn_Stop.TabIndex = 5;
+            this.btn_Stop.Text = "停止";
+            this.btn_Stop.UseVisualStyleBackColor = true;
+            this.btn_Stop.Click += new System.EventHandler(this.btn_Stop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(419, 425);
+            this.Controls.Add(this.btn_Stop);
             this.Controls.Add(this.btn_listener);
             this.Controls.Add(this.lstViewInfo);
             this.Controls.Add(this.button2);
@@ -94,6 +106,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ListView lstViewInfo;
         private System.Windows.Forms.Button btn_listener;
+        private System.Windows.Forms.Button btn_Stop;
     }
 }
 

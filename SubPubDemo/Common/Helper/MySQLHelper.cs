@@ -1,9 +1,11 @@
-﻿/********************************************************************************
-** auth： lyw
-** date： 2016-09-12
-** desc： 数据库操作帮助类
-** Ver.:  V1.0.0
-*********************************************************************************/
+﻿//***********************************************************************************
+// 文件名称：MySqlHelper.cs
+// 功能描述：数据库操作服务类
+// 数据表：
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
 
 using System;
 using System.Data;
@@ -21,15 +23,15 @@ namespace Common.Helper
         /// <summary>
         /// 连接字符串
         /// </summary>
-        private static readonly String constr = String.Empty;
+        private static readonly String mConnectStr = String.Empty;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        static MySQLHelper()
+        private static MySQLHelper()
         {
-            //constr = "Server=127.0.0.1; Uid=root; Pwd=1234; Database=subpubdemodb";
-            constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            // 从配置文件中获取连接字符串
+            mConnectStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace Common.Helper
         {
             int count = 0;
 
-            using (MySqlConnection mycon = new MySqlConnection(constr))
+            using (MySqlConnection mycon = new MySqlConnection(mConnectStr))
             {
                 mycon.Open();
                 MySqlCommand mycmd = new MySqlCommand(cmdText);
@@ -62,7 +64,7 @@ namespace Common.Helper
         {
             Int32 count = 0;
 
-            using (MySqlConnection mycon = new MySqlConnection(constr))
+            using (MySqlConnection mycon = new MySqlConnection(mConnectStr))
             {
                 mycon.Open();
                 MySqlCommand mycmd = new MySqlCommand(cmdText);
@@ -70,6 +72,7 @@ namespace Common.Helper
                 {
                     mycmd.Parameters.AddRange(cmdParas);
                 }
+
                 count = mycmd.ExecuteNonQuery();
                 mycon.Close();
             }
@@ -86,10 +89,10 @@ namespace Common.Helper
         {
             DataTable db = new DataTable();
 
-            using (MySqlConnection conn = new MySqlConnection(constr))
+            using (MySqlConnection conn = new MySqlConnection(mConnectStr))
             {
                 conn.Open();
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmdText, constr);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmdText, mConnectStr);
                 adapter.Fill(db);
                 conn.Close();
             }
@@ -103,11 +106,11 @@ namespace Common.Helper
         /// <param name="cmdText">sql语句</param>
         /// <param name="cmdParas">命令参数</param>
         /// <returns>结果的首行首列的object值</returns>
-        public static object ExecuteScalar(String cmdText, MySqlParameter[] cmdParas)
+        public static Object ExecuteScalar(String cmdText, MySqlParameter[] cmdParas)
         {
             Object obj = null;
 
-            using (MySqlConnection mycon = new MySqlConnection(constr))
+            using (MySqlConnection mycon = new MySqlConnection(mConnectStr))
             {
                 mycon.Open();
                 MySqlCommand mycmd = new MySqlCommand(cmdText, mycon);

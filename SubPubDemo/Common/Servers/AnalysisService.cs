@@ -1,14 +1,16 @@
-﻿/********************************************************************************
-** auth： lyw
-** date： 2016-09-20
-** desc： AnalysisService
-** Ver.:  V1.0.0
-*********************************************************************************/
+﻿//***********************************************************************************
+// 文件名称：AnalysisService.cs
+// 功能描述：解析服务帮助类
+// 数据表：userinfo
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Common.Servers
 {
@@ -24,7 +26,7 @@ namespace Common.Servers
         /// <summary>
         /// 数据编码
         /// </summary>
-        private static Encoding encoding = Encoding.UTF8;
+        private const Encoding mEncoding = Encoding.UTF8;
 
         /// <summary>
         /// 解析Json数据流,返回用户list
@@ -36,9 +38,17 @@ namespace Common.Servers
             try
             {
                 List<UserInfo> lstInfo = new List<UserInfo>();
-                StreamReader strReader = new StreamReader(stream, encoding);
-                String json = strReader.ReadToEnd();
+                String json = String.Empty;
+
+                // 读取json数据流
+                using (StreamReader strReader = new StreamReader(stream, mEncoding))
+                {
+                    json = strReader.ReadToEnd();
+                }
+
+                // 反序列化操作
                 lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+                
                 return lstInfo;
             }
             catch (Exception ex)
@@ -58,9 +68,16 @@ namespace Common.Servers
             try
             {
                 String json = String.Empty;
-                StreamReader streamReader = new StreamReader(stream, encoding);
-                json = streamReader.ReadToEnd();
+                
+                // 读取json数据流
+                using (StreamReader streamReader = new StreamReader(stream, mEncoding))
+                {
+                    json = streamReader.ReadToEnd();
+                }
+
+                // 反序列化
                 UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
+                
                 return userInfo;
             }
             catch (Exception ex)
@@ -68,7 +85,6 @@ namespace Common.Servers
                 Console.WriteLine("解析json数据流错误异常：" + ex);
                 return null;
             }
-
         }
     }
 }

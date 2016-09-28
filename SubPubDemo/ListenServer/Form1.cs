@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿//***********************************************************************************
+// 文件名称：From1.cs
+// 功能描述：监听服务界面开启
+// 数据表：
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
+
+using System;
 using System.Windows.Forms;
 
 namespace ListenServer

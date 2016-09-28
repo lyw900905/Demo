@@ -1,15 +1,16 @@
-﻿/********************************************************************************
-** auth： lyw
-** date： 2016-09-12
-** desc： 客户端调用
-** Ver.:  V1.0.0
-*********************************************************************************/
+﻿//***********************************************************************************
+// 文件名称：TestHttpClient.cs
+// 功能描述：请求服务器监听测试类
+// 数据表：
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
 
 using System;
 using System.Text;
 using System.Net;
 using System.IO;
-using System.Threading;
 using System.Collections.Generic;
 
 namespace TestHttp
@@ -18,27 +19,19 @@ namespace TestHttp
     using Common.Servers;
 
     /// <summary>
-    /// 客户端调用服务类
+    /// 客户端调用服务监听测试类
     /// </summary>
     public class TestHttpClient
     {
         /// <summary>
         /// 静态实例字段
         /// </summary>
-        private static TestHttpClient instance;
+        private static TestHttpClient mInstance;
 
         /// <summary>
         /// 单例操作锁
         /// </summary>
-        private static Object instanceLock = new object();
-
-        /// <summary>
-        /// 私有构造函数
-        /// </summary>
-        private TestHttpClient()
-        {
-
-        }
+        private static Object mInstanceLock = new Object();
 
         /// <summary>
         /// 静态实例属性
@@ -47,18 +40,18 @@ namespace TestHttp
         {
             get
             {
-                if (instance == null)
+                if (mInstance == null)
                 {
-                    lock (instanceLock)
+                    lock (mInstanceLock)
                     {
-                        if (instance == null)
+                        if (mInstance == null)
                         {
-                            instance = new TestHttpClient();
+                            mInstance = new TestHttpClient();
                         }
                     }
                 }
 
-                return instance;
+                return mInstance;
             }
         }
 
@@ -70,12 +63,12 @@ namespace TestHttp
         /// <summary>
         /// 异步调用方法
         /// </summary>
-        private AsyncCallback ac = null;
+        private AsyncCallback callBack = null;
 
         /// <summary>
         /// 请求监听地址
         /// </summary>
-        private static String _strUrl = "http://127.0.0.1:2020/";
+        private static String mRequestServerStrUrl = "http://10.254.0.150:9005/";
 
         /// <summary>
         /// 客户端监听地址
@@ -108,15 +101,24 @@ namespace TestHttp
         private event Action<List<UserInfo>> publishEvent;
 
         /// <summary>
+        /// 私有构造函数
+        /// </summary>
+        private TestHttpClient()
+        {
+
+        }
+
+        /// <summary>
         /// 发送信息
         /// </summary>
         /// <param name="str">要发送的数据字符串</param>
-        public void SendMsg(String str)
+        public void SendRequestMsg(String str)
         {
+            // 发送请求的字符串到服务器监听
             try
             {
                 sendStr = str;
-                httpWebRequest = (HttpWebRequest)WebRequest.Create(_strUrl);
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(mRequestServerStrUrl);
                 httpWebRequest.Method = "POST";
                 httpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpWebRequest);
             }
@@ -129,14 +131,16 @@ namespace TestHttp
         /// <summary>
         /// 开始连接查询timer
         /// </summary>
-        public void StartConnet()
+        public void StartConnetQuery()
         {
             // 查询服务器更新数据timer初始化及参数设置
             connectTimer = new System.Timers.Timer();
+
             connectTimer.Interval = 2 * 1000;
             connectTimer.AutoReset = false;
             connectTimer.Elapsed -= connectTimer_Elapsed;
-            connectTimer.Elapsed +=connectTimer_Elapsed;
+            connectTimer.Elapsed += connectTimer_Elapsed;
+
             connectTimer.Start();
         }
 
@@ -144,14 +148,21 @@ namespace TestHttp
         /// 获取信息
         /// </summary>
         /// <returns>返回响应数据流Stream</returns>
-        private Stream GetMsg()
+        private Stream GetResponseMsg()
         {
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(_strUrl);
-            httpWebRequest.Method = "GET";
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            Stream res = null;
-            res = httpWebResponse.GetResponseStream();
-            return res;
+            try
+            {
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(mRequestServerStrUrl);
+                httpWebRequest.Method = "GET";
+                httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                return httpWebResponse.GetResponseStream();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("获取监听请求数据异常：" + ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -163,9 +174,10 @@ namespace TestHttp
             clientListener = new HttpListener();
             clientListener.Prefixes.Add(clientStrUrl);
             clientListener.Start();
-            ac = new AsyncCallback(GetContextAsynCallback);
-            clientListener.BeginGetContext(ac, null);
-            Console.WriteLine(DateTime.Now.ToString());
+            callBack = new AsyncCallback(GetContextAsynCallback);
+            clientListener.BeginGetContext(callBack, null);
+
+            Console.WriteLine("开启客户端监听：" + DateTime.Now.ToString());
         }
 
         /// <summary>
@@ -173,7 +185,10 @@ namespace TestHttp
         /// </summary>
         public void StopClientListener()
         {
-            clientListener.Stop();
+            if (clientListener != null && clientListener.IsListening)
+            {
+                clientListener.Stop();
+            }
         }
 
         /// <summary>
@@ -182,6 +197,7 @@ namespace TestHttp
         /// <param name="dealAction">委托方法</param>
         public void Subscriber(Action<List<UserInfo>> dealAction)
         {
+            // 判断是否已经订阅此事件
             if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
             {
                 foreach (var item in publishEvent.GetInvocationList())
@@ -203,9 +219,11 @@ namespace TestHttp
         private void PostCallBack(IAsyncResult asy)
         {
             httpWebRequest = (HttpWebRequest)asy.AsyncState;
+            Byte[] sendMsg = Encoding.UTF8.GetBytes(sendStr);
+
+            // 写入推送数据流
             using (Stream stream = httpWebRequest.EndGetRequestStream(asy))
             {
-                Byte[] sendMsg = Encoding.UTF8.GetBytes(sendStr);
                 stream.Write(sendMsg, 0, sendMsg.Length);
                 stream.Close();
             }
@@ -248,12 +266,11 @@ namespace TestHttp
                 using (Stream output = response.OutputStream)
                 {
                     output.Write(buffer, 0, buffer.Length);
-                    response.OutputStream.Close();
                     output.Close();
                 }
             }
 
-            clientListener.BeginGetContext(ac, null);
+            clientListener.BeginGetContext(callBack, null);
         }
 
         /// <summary>
@@ -278,13 +295,14 @@ namespace TestHttp
             // 每2秒从服务器获取更新数据并推送至界面显示
             try
             {
-                Stream res = GetMsg();
+                Stream res = GetResponseMsg();
                 List<UserInfo> lstuser = AnalysisService.AnalysisJsonStream(res);
 
                 // 判断解析后数据是否为空
                 if (lstuser != null && lstuser.Count > 0)
                 {
                     OnUpdate(lstuser);
+
                     Console.WriteLine("更新数据时间：" + DateTime.Now);
                 }
             }
@@ -294,6 +312,7 @@ namespace TestHttp
             }
             finally
             {
+                // 重新开启查询
                 connectTimer.Start();
             }
         }

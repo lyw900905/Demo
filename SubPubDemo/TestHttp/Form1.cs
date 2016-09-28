@@ -1,16 +1,21 @@
-﻿using System;
+﻿//***********************************************************************************
+// 文件名称：Form1.cs
+// 功能描述：请求服务器监听测试界面
+// 数据表：
+// 作者：Lyevn
+// 日期：2016/9/12 20:10:20
+// 修改记录：
+//***********************************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
 
 namespace TestHttp
 {
     using Common.Entity;
-    using Common.Helper;
     using Common.Servers;
-    using Newtonsoft.Json;
 
     public partial class Form1 : Form
     {
@@ -27,7 +32,7 @@ namespace TestHttp
         private void button1_Click(object sender, EventArgs e)
         {
             String teststr = TestDataService.CreateTestData();
-            TestHttpClient.Instance.SendMsg(teststr);
+            TestHttpClient.Instance.SendRequestMsg(teststr);
             TestHttpClient.Instance.Subscriber(UpdateListUser);
         }
 
@@ -39,7 +44,7 @@ namespace TestHttp
         private void button2_Click(object sender, EventArgs e)
         {
             TestHttpClient.Instance.Subscriber(UpdateListUser);
-            TestHttpClient.Instance.StartConnet();
+            TestHttpClient.Instance.StartConnetQuery();
         }
 
         /// <summary>
@@ -48,6 +53,7 @@ namespace TestHttp
         /// <param name="lstUser">信息列表</param>
         private void UpdateListUser(List<UserInfo> lstUser)
         {
+            // 刷新界面listView显示
             this.Invoke(new Action(delegate
             {
                 lstUser = lstUser.OrderByDescending(o => o.UserIntegral).ToList();
@@ -73,9 +79,7 @@ namespace TestHttp
                     lvi.SubItems.Add(item.UserIntegral.ToString());
 
                     lstViewInfo.Items.Add(lvi);
-
                 }
-
             }));
         }
 
@@ -87,6 +91,16 @@ namespace TestHttp
         private void btn_listener_Click(object sender, EventArgs e)
         {
             TestHttpClient.Instance.StartClientListener();
+        }
+
+        /// <summary>
+        /// 停止客户端监听
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_Stop_Click(object sender, EventArgs e)
+        {
+            TestHttpClient.Instance.StopClientListener();
         }
     }
 }
