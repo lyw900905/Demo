@@ -30,30 +30,23 @@ namespace Common.DAL
         {
             List<UserInfo> userList = new List<UserInfo>();
             String sqlstr = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
-            try
-            {
-                // 数据获取
-                DataTable dt = MySQLHelper.GetDataTable(sqlstr);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        // 用户信息设置
-                        UserInfo info = new UserInfo
-                        {
-                            UserId = Convert.ToInt32(row["UserId"]),
-                            UserName = row["UserName"].ToString(),
-                            UserIntegral = Convert.ToInt32(row["UserIntegral"])
-                        };
 
-                        userList.Add(info);
-                    }
-                }
-            }
-            catch (Exception ex)
+            // 数据获取
+            DataTable dt = MySQLHelper.GetDataTable(sqlstr);
+            if (dt != null && dt.Rows.Count > 0)
             {
-                Console.WriteLine("查询所有用户信息异常：" + ex);
-                return null;
+                foreach (DataRow row in dt.Rows)
+                {
+                    // 用户信息设置
+                    UserInfo info = new UserInfo
+                    {
+                        UserId = Convert.ToInt32(row["UserId"]),
+                        UserName = row["UserName"].ToString(),
+                        UserIntegral = Convert.ToInt32(row["UserIntegral"])
+                    };
+
+                    userList.Add(info);
+                }
             }
 
             return userList;
@@ -67,28 +60,22 @@ namespace Common.DAL
         public static Int32 AddUserInfo(UserInfo userInfo)
         {
             Object obj = null;
-            try
-            {
-                // Sql指令组织
-                String sqlstr = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
-                MySqlParameter[] para = new MySqlParameter[]
-                {
-                    new MySqlParameter("@UserName",userInfo.UserName),
-                    new MySqlParameter("@UserIntegral",userInfo.UserIntegral)
-                };
 
-                obj = MySQLHelper.ExecuteScalar(sqlstr, para);
-                if (obj != null)
-                {
-                    userInfo.UserId = Convert.ToInt32(obj);
-                }
-
-                return userInfo.UserId;
-            }
-            catch (Exception ex)
+            // Sql指令组织
+            String sqlstr = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
+            MySqlParameter[] para = new MySqlParameter[]
             {
-                throw ex;
+                new MySqlParameter("@UserName",userInfo.UserName),
+                new MySqlParameter("@UserIntegral",userInfo.UserIntegral)
+            };
+
+            obj = MySQLHelper.ExecuteScalar(sqlstr, para);
+            if (obj != null)
+            {
+                userInfo.UserId = Convert.ToInt32(obj);
             }
+
+            return userInfo.UserId;
         }
     }
 }

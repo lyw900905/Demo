@@ -1,13 +1,15 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubPubDemo", "SubPubDemo\SubPubDemo.csproj", "{82553DD9-7046-4D07-B3AE-8A5DA8EED373}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2CB68A82-E742-4A03-B959-0DD316B29096}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListenServer", "ListenServer\ListenServer.csproj", "{D80511AA-C57A-43B6-BE89-7AF39D386557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHttp", "TestHttp\TestHttp.csproj", "{655C837D-0177-4EF3-A55A-8CFE85CAADCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientTest", "TestHttp\HttpClientTest.csproj", "{655C837D-0177-4EF3-A55A-8CFE85CAADCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -46,19 +46,10 @@ namespace SubPubDemo
         /// 取消订阅
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        public void DelSubscribe(Action<String> dealAction)
+        public void DeleteSubscribe(Action<String> dealAction)
         {
             // 判断是否存在要取消订阅的事件方法，存在则取消事件
-            if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
-            {
-                foreach (var action in publishEvent.GetInvocationList())
-                {
-                    if (action.Equals(dealAction))
-                    {
-                        publishEvent -= dealAction;
-                    }
-                }
-            }
+            publishEvent -= dealAction;
         }
 
         /// <summary>

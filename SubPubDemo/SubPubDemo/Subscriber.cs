@@ -19,7 +19,7 @@ namespace SubPubDemo
         /// <summary>
         /// 订阅名称
         /// </summary>
-        private String mSubscriberName;
+        private String subscriberName;
 
         /// <summary>
         /// 构造函数
@@ -27,7 +27,7 @@ namespace SubPubDemo
         /// <param name="name">名称</param>
         public Subscriber(String name)
         {
-            mSubscriberName = name;
+            subscriberName = name;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SubPubDemo
         /// <param name="content">发布内容</param>
         public void ShowContent(String content)
         {
-            Console.WriteLine(String.Format("我是{0},我收到订阅的消息是{1}", mSubscriberName, content));
+            Console.WriteLine(String.Format("我是{0},我收到订阅的消息是{1}", subscriberName, content));
         }
     }
 }

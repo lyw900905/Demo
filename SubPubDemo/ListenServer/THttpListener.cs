@@ -27,6 +27,8 @@ namespace ListenServer
     /// </summary>
     public class THttpListener
     {
+        #region 静态字段
+
         /// <summary>
         /// 静态实例字段
         /// </summary>
@@ -36,6 +38,44 @@ namespace ListenServer
         /// 单例操作锁
         /// </summary>
         private static Object mInstanceLock = new Object();
+
+        /// <summary>
+        /// 请求监听地址
+        /// </summary>
+        private static String mStrUrl = "http://127.0.0.1:3030/";
+
+        /// <summary>
+        /// 请求返回状态码
+        /// </summary>
+        private const Int32 mStatusCode = 200;
+
+        /// <summary>
+        /// 传输数据编码
+        /// </summary>
+        private static Encoding mEncoding = Encoding.UTF8;
+
+        #endregion
+
+        #region 字段
+
+        /// <summary>
+        /// 监听
+        /// </summary>
+        private HttpListener serverListener;
+
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        private String sendStr = String.Empty;
+
+        /// <summary>
+        /// 异步调用方法
+        /// </summary>
+        private AsyncCallback callBack = null;
+
+        #endregion
+
+        #region 属性
 
         /// <summary>
         /// 静态实例属性
@@ -59,35 +99,9 @@ namespace ListenServer
             }
         }
 
-        /// <summary>
-        /// 监听
-        /// </summary>
-        private HttpListener mServerListener;
+        #endregion
 
-        /// <summary>
-        /// 发送数据
-        /// </summary>
-        private String mSendStr = String.Empty;
-
-        /// <summary>
-        /// 请求监听地址
-        /// </summary>
-        private static String mStrUrl = "http://127.0.0.1:3030/";
-
-        /// <summary>
-        /// 请求
-        /// </summary>
-        private HttpWebRequest mHttpWebRequest;
-
-        /// <summary>
-        /// 异步调用方法
-        /// </summary>
-        private AsyncCallback mCallBack = null;
-
-        /// <summary>
-        /// 是否更新
-        /// </summary>
-        private Boolean mIsUpdate = false;
+        #region 构造函数
 
         /// <summary>
         /// 私有构造函数
@@ -97,173 +111,154 @@ namespace ListenServer
 
         }
 
-        /// <summary>
-        /// 开启监听服务线程
-        /// </summary>
-        public void StartServerThread()
-        {
-            Thread th = new Thread(new ThreadStart(StartServerListener));
-            th.Start();
-        }
+        #endregion
+
+        #region 公共方法
 
         /// <summary>
-        /// 开始监听服务
+        /// 开始启动服务器监听
         /// </summary>
         public void StartServerListener()
         {
-            try
-            {
-                mServerListener = new HttpListener();
-                String serverStrUrl = ConfigurationManager.AppSettings["ServerListenerUrl"];
-                mServerListener.Prefixes.Add(serverStrUrl);
-                mServerListener.Start();
-                mCallBack = new AsyncCallback(GetContextAsynCallback);
-                mServerListener.BeginGetContext(mCallBack, null);
+            serverListener = new HttpListener();
+            String serverStrUrl = ConfigurationManager.AppSettings["ServerListenerUrl"];//// 配置文件中获取服务器监听url
+            serverListener.Prefixes.Add(serverStrUrl);
+            serverListener.Start();
+            callBack = new AsyncCallback(GetContextAsynCallback);////设置回调函数
+            serverListener.BeginGetContext(callBack, null);////开始异步传输
 
-                Console.WriteLine("开启服务器监听：" + DateTime.Now);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("开启服务器监听异常：" + ex);
-            }
+            Console.WriteLine("开启服务器监听：" + DateTime.Now);
         }
 
         /// <summary>
-        /// 停止监听服务
+        /// 停止服务器监听服务
         /// </summary>
         public void StopServerListener()
         {
-            if (mServerListener != null && mServerListener.IsListening)
+            if (serverListener != null && serverListener.IsListening)
             {
-                mServerListener.Stop();
+                serverListener.Stop();
             }
         }
 
+        #endregion
+
+        #region 私有方法
+
         /// <summary>
-        /// 收到监听请求回调
+        /// 收到监听内容回调处理
         /// </summary>
-        /// <param name="ia">异步结束状态</param>
-        private void GetContextAsynCallback(IAsyncResult ia)
+        /// <param name="asyncResult">异步结束状态</param>
+        private void GetContextAsynCallback(IAsyncResult asyncResult)
         {
             // 收到客户端请求时回调函数
             // 异步操作完成
             // 推送操作：解析数据，添加到数据
             // 获取操作：从数据库获取数据并发送到客户端
-            try
+            if (!asyncResult.IsCompleted)
             {
-                if (ia.IsCompleted)
+                serverListener.BeginGetContext(callBack, null);
+            }
+
+            HttpListenerContext ctx = serverListener.EndGetContext(asyncResult);
+            ctx.Response.StatusCode = mStatusCode;
+            HttpListenerRequest request = ctx.Request;
+
+            // 请求类型判断
+            if (request.HttpMethod == "POST")
+            {
+                // 解析数据
+                Stream stream = request.InputStream;
+                UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream, mEncoding);
+
+                // 数据判断
+                if (userInfo != null)
                 {
-                    HttpListenerContext ctx = mServerListener.EndGetContext(ia);
-                    ctx.Response.StatusCode = 200;
-                    HttpListenerRequest request = ctx.Request;
-                    HttpListenerResponse response = ctx.Response;
-                    String responseString = String.Empty;
-
-                    // 请求类型判断
-                    if (request.HttpMethod == "POST")
-                    {
-                        // 解析数据
-                        Stream stream = request.InputStream;
-                        UserInfo userInfo = AnalysisService.AnalysisJsonStre(stream);
-
-                        // 数据判断
-                        if (userInfo != null)
-                        {
-                            UserInfoDAL.AddUserInfo(userInfo);//// 更新数据库
-                            mIsUpdate = true;
-                        }
-                    }
-
-                    #region 通过客户端请求更新
-
-                    if (request.HttpMethod == "GET" && mIsUpdate)
-                    {
-                        List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
-
-                        // 收到连接请求回传
-                        responseString = JsonConvert.SerializeObject(userList);
-                    }
-
-                    // 将数据转换为byte[]
-                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-                    response.ContentLength64 = buffer.Length;
-
-                    // 写入输出数据
-                    using (Stream output = response.OutputStream)
-                    {
-                        output.Write(buffer, 0, buffer.Length);
-                        output.Close();
-                    }
-
-                    #endregion
-
-                    #region 互相监听时更新数据
-
-                    // 由于客户端地址只有一个开启多个客户端使用时异常
-                    //OnUpdate();
-
-                    #endregion
+                    UserInfoDAL.AddUserInfo(userInfo);//// 更新数据库
                 }
-
-                mServerListener.BeginGetContext(mCallBack, null);
             }
-            catch (Exception ex)
+
+            #region 通过客户端请求更新
+
+            String responseString = String.Empty;
+            if (request.HttpMethod == "GET")
             {
-                Console.WriteLine("收到请求，异步回调函数异常：" + ex);
+                List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
+
+                // 收到连接请求回传
+                responseString = JsonConvert.SerializeObject(userList);
             }
 
+            // 将数据转换为byte[]
+            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+
+            HttpListenerResponse response = ctx.Response;
+            response.ContentLength64 = buffer.Length;
+
+            // 写入输出数据
+            using (Stream outputStream = response.OutputStream)
+            {
+                outputStream.Write(buffer, 0, buffer.Length);
+                outputStream.Close();
+            }
+
+            #endregion
+
+            #region 互相监听时更新数据
+
+            // 由于客户端地址只有一个开启多个客户端使用时异常
+            //GetResponseData();
+
+            #endregion
         }
 
         /// <summary>
-        /// 测试发送数据到客户端
+        /// 获取返回请求的数据
         /// </summary>
-        private void OnUpdate()
+        private void GetResponseData()
         {
-            // 客户端互相监听时，更新客户端数据
+            // 获取数据库中用户信息
             List<UserInfo> userList = UserInfoDAL.QueryAllUserInfo();
             String responseString = JsonConvert.SerializeObject(userList);
 
-            SendRequestMsg(responseString);
+            // 发送返回请求的数据信息
+            SendRequestMessage(responseString);
         }
 
         /// <summary>
-        /// 发送信息
+        /// 发送请求信息
         /// </summary>
-        /// <param name="str">String型：要发送的数据</param>
-        private void SendRequestMsg(String str)
+        /// <param name="responseStr">String型：要发送的Json字符串</param>
+        private void SendRequestMessage(String responseStr)
         {
             // 通过客户端开启监听，服务器发送数据到客户端监听地址
-            try
-            {
-                mSendStr = str;
-                mHttpWebRequest = (HttpWebRequest)WebRequest.Create(mStrUrl);
-                mHttpWebRequest.Method = "POST";
-                mHttpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), mHttpWebRequest);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("向客户端监听发送数据异常：" + ex);
-            }
+            sendStr = responseStr; 
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(mStrUrl);
+            httpWebRequest.Method = "POST";
+
+            // 开始异步请求传输
+            httpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpWebRequest);
         }
 
         /// <summary>
         /// 发送数据回调函数
         /// </summary>
-        /// <param name="asy">异步结束状态</param>
-        private void PostCallBack(IAsyncResult asy)
+        /// <param name="asyncResult">异步结束状态</param>
+        private void PostCallBack(IAsyncResult asyncResult)
         {
-            mHttpWebRequest = (HttpWebRequest)asy.AsyncState;
+            HttpWebRequest httpWebRequest = (HttpWebRequest)asyncResult.AsyncState;
+            Byte[] sendMsg = Encoding.UTF8.GetBytes(sendStr);//// 发送数据流
 
-            Byte[] sendMsg = Encoding.UTF8.GetBytes(mSendStr);//// 发送数据流
-
-            // 写入向监听推送的数据
-            using (Stream stream = mHttpWebRequest.EndGetRequestStream(asy))
+            // 写入推送的数据
+            using (Stream requestStream = httpWebRequest.EndGetRequestStream(asyncResult))
             {
-                stream.Write(sendMsg, 0, sendMsg.Length);
-                stream.Close();
+                requestStream.Write(sendMsg, 0, sendMsg.Length);
+                requestStream.Close();
             }
 
-            mHttpWebRequest.GetResponse();
+            httpWebRequest.GetResponse();
         }
+
+        #endregion
     }
 }

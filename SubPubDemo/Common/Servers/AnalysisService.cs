@@ -24,67 +24,47 @@ namespace Common.Servers
     public class AnalysisService
     {
         /// <summary>
-        /// 数据编码
-        /// </summary>
-        private const Encoding mEncoding = Encoding.UTF8;
-
-        /// <summary>
         /// 解析Json数据流,返回用户list
         /// </summary>
         /// <param name="stream">json数据流</param>
-        /// <returns>用户列表,异常返回Null</returns>
-        public static List<UserInfo> AnalysisJsonStream(Stream stream)
+        /// <returns>用户信息列表</returns>
+        public static List<UserInfo> AnalysisJsonStream(Stream stream, Encoding encode)
         {
-            try
-            {
-                List<UserInfo> lstInfo = new List<UserInfo>();
-                String json = String.Empty;
+            List<UserInfo> lstInfo = new List<UserInfo>();
+            String json = String.Empty;
 
-                // 读取json数据流
-                using (StreamReader strReader = new StreamReader(stream, mEncoding))
-                {
-                    json = strReader.ReadToEnd();
-                }
-
-                // 反序列化操作
-                lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
-                
-                return lstInfo;
-            }
-            catch (Exception ex)
+            // 读取json数据流
+            using (StreamReader strReader = new StreamReader(stream, encode))
             {
-                Console.WriteLine("解析json数据流错误异常：" + ex);
-                return null;
+                json = strReader.ReadToEnd();
             }
+
+            // 反序列化操作
+            lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+
+            return lstInfo;
         }
 
         /// <summary>
         /// 解析json数据流，返回用户信息
         /// </summary>
         /// <param name="stream">用户json数据流</param>
+        /// <param name="encode">传输数据编码类型</param>
         /// <returns>用户信息</returns>
-        public static UserInfo AnalysisJsonStre(Stream stream)
+        public static UserInfo AnalysisJsonStre(Stream stream, Encoding encode)
         {
-            try
-            {
-                String json = String.Empty;
-                
-                // 读取json数据流
-                using (StreamReader streamReader = new StreamReader(stream, mEncoding))
-                {
-                    json = streamReader.ReadToEnd();
-                }
+            String json = String.Empty;
 
-                // 反序列化
-                UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
-                
-                return userInfo;
-            }
-            catch (Exception ex)
+            // 读取json数据流
+            using (StreamReader streamReader = new StreamReader(stream, encode))
             {
-                Console.WriteLine("解析json数据流错误异常：" + ex);
-                return null;
+                json = streamReader.ReadToEnd();
             }
+
+            // 反序列化
+            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(json);
+
+            return userInfo;
         }
     }
 }
