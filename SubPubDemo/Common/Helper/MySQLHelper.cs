@@ -28,7 +28,7 @@ namespace Common.Helper
         /// <summary>
         /// 构造函数
         /// </summary>
-        private static MySQLHelper()
+        static MySQLHelper()
         {
             // 从配置文件中获取连接字符串
             mConnectStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;

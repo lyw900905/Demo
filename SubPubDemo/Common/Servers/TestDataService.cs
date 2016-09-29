@@ -25,15 +25,18 @@ namespace Common.Servers
         /// <returns>Json字符串</returns>
         public static String CreateTestData()
         {
+            // UserInfo 用户名采用“用户名”+ Guid前四位
+            // 用户积分采用1到150内的随机数
             UserInfo userInfo = new UserInfo();
             
-            // 数据填充
-            String str = String.Empty; 
-            str = Guid.NewGuid().ToString("N");
-            userInfo.UserName = "测试用户名" + str.Substring(0, 4);
+            // 用户名数据填充
+            String strGuid = String.Empty; 
+            strGuid = Guid.NewGuid().ToString("N");
+            userInfo.UserName = "用户名" + strGuid.Substring(0, 4);
 
-            Random rd = new Random();
-            userInfo.UserIntegral = rd.Next(1, 150);
+            // 生成用户随机积分
+            Random random = new Random();
+            userInfo.UserIntegral = random.Next(1, 150);
 
             return JsonConvert.SerializeObject(userInfo);
         }

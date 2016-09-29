@@ -26,7 +26,7 @@ namespace SubPubDemo
         /// 取消订阅方法
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        void DelSubscribe(Action<String> dealAction);
+        void DeleteSubscribe(Action<String> dealAction);
 
         /// <summary>
         /// 发布

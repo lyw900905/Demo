@@ -28,26 +28,28 @@ namespace Common.Helper
         public static String Serialize<T>(T obj)
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream ms = new MemoryStream();
-            serializer.WriteObject(ms, obj);
-            String retVal = Encoding.UTF8.GetString(ms.ToArray());
+
+            MemoryStream memoryStream = new MemoryStream();
+            serializer.WriteObject(memoryStream, obj);
+
+            String jsonStr = Encoding.UTF8.GetString(memoryStream.ToArray());
             
-            return retVal;
+            return jsonStr;
         }
 
         /// <summary>
         /// 反序列化
         /// </summary>
         /// <typeparam name="T">反序列化对象类型</typeparam>
-        /// <param name="json">json字符串</param>
+        /// <param name="jsonStr">json字符串</param>
         /// <returns>反序列化对象</returns>
-        public static T Deserialize<T>(String json)
+        public static T Deserialize<T>(String jsonStr)
         {
-            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+            using (MemoryStream memoryStram = new MemoryStream(Encoding.UTF8.GetBytes(jsonStr)))
             {
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                T obj = (T)serializer.ReadObject(ms);
-                ms.Close();
+                T obj = (T)serializer.ReadObject(memoryStram);
+                memoryStram.Close();
 
                 return obj;
             }

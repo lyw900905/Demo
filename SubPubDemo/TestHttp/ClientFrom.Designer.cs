@@ -1,6 +1,6 @@
 ﻿namespace TestHttp
 {
-    partial class Form1
+    partial class ClientFrom
     {
         /// <summary>
         /// 必需的设计器变量。
