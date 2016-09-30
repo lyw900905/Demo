@@ -20,13 +20,13 @@ namespace SubPubDemo
         /// 订阅方法
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        void Subscribe(Action<String> dealAction);
+        void Subscribe(String subscriberName, Action<String> dealAction);
 
         /// <summary>
         /// 取消订阅方法
         /// </summary>
         /// <param name="dealAction">委托方法</param>
-        void DeleteSubscribe(Action<String> dealAction);
+        void DeleteSubscribe(String subscriberName, Action<String> dealAction);
 
         /// <summary>
         /// 发布

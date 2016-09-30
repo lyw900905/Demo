@@ -29,10 +29,10 @@ namespace Common.Servers
             // 用户积分采用1到150内的随机数
             UserInfo userInfo = new UserInfo();
             
-            // 用户名数据填充
-            String strGuid = String.Empty; 
-            strGuid = Guid.NewGuid().ToString("N");
-            userInfo.UserName = "用户名" + strGuid.Substring(0, 4);
+            // “用户名”数据填充
+            String guidString = String.Empty; 
+            guidString = Guid.NewGuid().ToString("N");
+            userInfo.UserName = "用户名" + guidString.Substring(0, 4);
 
             // 生成用户随机积分
             Random random = new Random();

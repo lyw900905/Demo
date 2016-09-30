@@ -8,6 +8,7 @@
 //***********************************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace SubPubDemo
 {
@@ -22,46 +23,78 @@ namespace SubPubDemo
         private event Action<String> publishEvent;
 
         /// <summary>
+        /// 用户订阅方法列表操作锁
+        /// </summary>
+        private Object dictionaryLock = new Object();
+
+        /// <summary>
+        /// 存储用户订阅的方法列表
+        /// </summary>
+        private Dictionary<String, Action<string>> subscribeActionDictionary = new Dictionary<string, Action<string>>();
+
+        /// <summary>
         /// 订阅方法
         /// </summary>
-        /// <param name="dealAction">委托方法</param>
-        public void Subscribe(Action<String> dealAction)
+        /// <param name="dealAction">处理事件委托方法</param>
+        public void Subscribe(String subscriberName, Action<String> dealAction)
         {
-            // 判断是否已经存在要订阅方法事件
-            if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
-            {
-                foreach (var action in publishEvent.GetInvocationList())
+            lock (dictionaryLock)
+            {            
+                // 判断是否已经存在订阅内容，不存在则添加
+                if (!subscribeActionDictionary.ContainsKey(subscriberName))
                 {
-                    if (action.Equals(dealAction))
-                    {
-                        return;
-                    }
+                    subscribeActionDictionary[subscriberName] = dealAction;
                 }
             }
 
-            publishEvent += dealAction;
+            //// 判断是否已经存在要订阅方法事件
+            //if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
+            //{
+            //    foreach (var action in publishEvent.GetInvocationList())
+            //    {
+            //        if (action.Equals(dealAction))
+            //        {
+            //            return;
+            //        }
+            //    }
+            //}
+
+            //publishEvent += dealAction;
         }
 
         /// <summary>
         /// 取消订阅
         /// </summary>
-        /// <param name="dealAction">委托方法</param>
-        public void DeleteSubscribe(Action<String> dealAction)
+        /// <param name="dealAction">处理事件委托方法</param>
+        public void DeleteSubscribe(String subscriberName, Action<String> dealAction)
         {
-            // 判断是否存在要取消订阅的事件方法，存在则取消事件
-            publishEvent -= dealAction;
+            lock (dictionaryLock)
+            {
+                // 判断是否存在要取消订阅的事件方法，存在则取消事件
+                if (subscribeActionDictionary.ContainsKey(subscriberName))
+                {
+                    subscribeActionDictionary.Remove(subscriberName);
+                }
+            }
         }
 
         /// <summary>
         /// 发布信息
         /// </summary>
-        /// <param name="msg">信息内容</param>
-        public void Publish(String msg)
+        /// <param name="message">信息内容</param>
+        public void Publish(String message)
         {
-            if (publishEvent != null)
+            // 获取订阅列表中的键值
+            var keys = subscribeActionDictionary.Keys;
+            foreach (var key in keys)
             {
-                publishEvent(msg);
+                subscribeActionDictionary[key].Invoke(message);
             }
+
+            //if (publishEvent != null)
+            //{
+            //    publishEvent(msg);
+            //}
         }
     }
 }

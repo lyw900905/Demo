@@ -30,7 +30,7 @@ namespace TestHttp
             InitializeComponent();
 
             // 订阅更新数据方法
-            HttpClientTest.Instance.Subscribe(UpdateUserInfo);
+            HttpClientTest.Instance.Subscribe(SetDisplayData);
         }
 
         /// <summary>
@@ -41,15 +41,15 @@ namespace TestHttp
         private void button1_Click(object sender, EventArgs e)
         {
             // 生成随机数据并发送至监听服务器
-            String teststr = TestDataService.CreateTestData();
-            HttpClientTest.Instance.SendRequestMsg(teststr);
+            String userInfoJson = TestDataService.CreateTestData();
+            HttpClientTest.Instance.SendRequestMsg(userInfoJson);
         }
 
         /// <summary>
         /// 开启客户端timer查询
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">按钮对象</param>
+        /// <param name="e">按钮对象事件参数信息</param>
         private void button2_Click(object sender, EventArgs e)
         {
             // 开始timer查询更新数据
@@ -60,13 +60,13 @@ namespace TestHttp
         /// 更新界面显示
         /// </summary>
         /// <param name="userInfoList">信息列表</param>
-        private void UpdateUserInfo(List<UserInfo> userInfoList)
+        private void SetDisplayData(List<UserInfo> userInfoList)
         {
             // 刷新界面listView显示
             this.Invoke(new Action(delegate
             {
                 userInfoList = userInfoList.OrderByDescending(o => o.UserIntegral).ToList();
-                
+
                 // listView界面属性设置
                 lstViewInfo.Items.Clear();
                 lstViewInfo.Columns.Clear();
@@ -82,16 +82,18 @@ namespace TestHttp
                 lstViewInfo.Columns.Add("积分", 50);
 
                 int count = 0;
-                foreach (var item in userInfoList)
+                foreach (var user in userInfoList)
                 {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.SubItems.Clear();
                     count++;
-                    lvi.Text = count.ToString();
-                    lvi.SubItems.Add(item.UserName);
-                    lvi.SubItems.Add(item.UserIntegral.ToString());
+                    ListViewItem listViewItem = new ListViewItem();
+                    listViewItem.SubItems.Clear();
 
-                    lstViewInfo.Items.Add(lvi);
+                    // 设置listView显示数据
+                    listViewItem.Text = count.ToString();
+                    listViewItem.SubItems.Add(user.UserName);
+                    listViewItem.SubItems.Add(user.UserIntegral.ToString());
+
+                    lstViewInfo.Items.Add(listViewItem);
                 }
             }));
         }

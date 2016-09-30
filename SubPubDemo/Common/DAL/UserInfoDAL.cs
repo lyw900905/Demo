@@ -28,28 +28,28 @@ namespace Common.DAL
         /// <returns>返回用户信息列表</returns>
         public static List<UserInfo> QueryAllUserInfo()
         {
-            List<UserInfo> userList = new List<UserInfo>();
-            String sqlstr = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
+            List<UserInfo> userInfoList = new List<UserInfo>();
+            String sqlString = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
 
             // 数据获取
-            DataTable dt = MySQLHelper.GetDataTable(sqlstr);
-            if (dt != null && dt.Rows.Count > 0)
+            DataTable dataTable = MySQLHelper.GetDataTable(sqlString);
+            if (dataTable != null && dataTable.Rows.Count > 0)
             {
-                foreach (DataRow row in dt.Rows)
+                foreach (DataRow dataRow in dataTable.Rows)
                 {
                     // 用户信息设置
-                    UserInfo info = new UserInfo
+                    UserInfo userInfo = new UserInfo
                     {
-                        UserId = Convert.ToInt32(row["UserId"]),
-                        UserName = row["UserName"].ToString(),
-                        UserIntegral = Convert.ToInt32(row["UserIntegral"])
+                        UserId = Convert.ToInt32(dataRow["UserId"]),
+                        UserName = dataRow["UserName"].ToString(),
+                        UserIntegral = Convert.ToInt32(dataRow["UserIntegral"])
                     };
 
-                    userList.Add(info);
+                    userInfoList.Add(userInfo);
                 }
             }
 
-            return userList;
+            return userInfoList;
         }
 
         /// <summary>
@@ -62,14 +62,14 @@ namespace Common.DAL
             Object obj = null;
 
             // Sql指令组织
-            String sqlstr = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
+            String sqlString = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
             MySqlParameter[] para = new MySqlParameter[]
             {
                 new MySqlParameter("@UserName",userInfo.UserName),
                 new MySqlParameter("@UserIntegral",userInfo.UserIntegral)
             };
 
-            obj = MySQLHelper.ExecuteScalar(sqlstr, para);
+            obj = MySQLHelper.ExecuteScalar(sqlString, para);
             if (obj != null)
             {
                 userInfo.UserId = Convert.ToInt32(obj);

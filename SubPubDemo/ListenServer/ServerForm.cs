@@ -27,8 +27,9 @@ namespace ListenServer
         /// </summary>
         /// <param name="sender">对象</param>
         /// <param name="e">对象事件参数信息</param>
-        private void btn_Open_Click(object sender, EventArgs e)
+        private void btn_Open_Click(Object sender, EventArgs e)
         {
+            // 开启服务器监听
             THttpListener.Instance.StartServerListener();
         }
     }

@@ -32,20 +32,20 @@ namespace Common.Helper
             MemoryStream memoryStream = new MemoryStream();
             serializer.WriteObject(memoryStream, obj);
 
-            String jsonStr = Encoding.UTF8.GetString(memoryStream.ToArray());
+            String jsonString = Encoding.UTF8.GetString(memoryStream.ToArray());
             
-            return jsonStr;
+            return jsonString;
         }
 
         /// <summary>
         /// 反序列化
         /// </summary>
         /// <typeparam name="T">反序列化对象类型</typeparam>
-        /// <param name="jsonStr">json字符串</param>
+        /// <param name="jsonString">json字符串</param>
         /// <returns>反序列化对象</returns>
-        public static T Deserialize<T>(String jsonStr)
+        public static T Deserialize<T>(String jsonString)
         {
-            using (MemoryStream memoryStram = new MemoryStream(Encoding.UTF8.GetBytes(jsonStr)))
+            using (MemoryStream memoryStram = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
             {
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
                 T obj = (T)serializer.ReadObject(memoryStram);

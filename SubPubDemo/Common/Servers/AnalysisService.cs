@@ -28,35 +28,35 @@ namespace Common.Servers
         /// </summary>
         /// <param name="stream">json数据流</param>
         /// <returns>用户信息列表</returns>
-        public static List<UserInfo> AnalysisJsonStream(Stream stream, Encoding encode)
+        public static List<UserInfo> AnalysisJsonStream(Stream stream, Encoding encoding)
         {
-            List<UserInfo> lstInfo = new List<UserInfo>();
+            List<UserInfo> userInfoList = new List<UserInfo>();
             String json = String.Empty;
 
             // 读取json数据流
-            using (StreamReader strReader = new StreamReader(stream, encode))
+            using (StreamReader strReader = new StreamReader(stream, encoding))
             {
                 json = strReader.ReadToEnd();
             }
 
             // 反序列化操作
-            lstInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+            userInfoList = JsonConvert.DeserializeObject<List<UserInfo>>(json);
 
-            return lstInfo;
+            return userInfoList;
         }
 
         /// <summary>
         /// 解析json数据流，返回用户信息
         /// </summary>
         /// <param name="stream">用户json数据流</param>
-        /// <param name="encode">传输数据编码类型</param>
+        /// <param name="encoding">传输数据编码类型</param>
         /// <returns>用户信息</returns>
-        public static UserInfo AnalysisJsonStre(Stream stream, Encoding encode)
+        public static UserInfo AnalysisJsonStre(Stream stream, Encoding encoding)
         {
             String json = String.Empty;
 
             // 读取json数据流
-            using (StreamReader streamReader = new StreamReader(stream, encode))
+            using (StreamReader streamReader = new StreamReader(stream, encoding))
             {
                 json = streamReader.ReadToEnd();
             }

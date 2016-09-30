@@ -22,6 +22,21 @@ namespace SubPubDemo
         private String subscriberName;
 
         /// <summary>
+        /// 订阅名称属性
+        /// </summary>
+        public String SubscriberName
+        {
+            get
+            {
+                return subscriberName;
+            }
+            set
+            {
+                value = subscriberName;
+            }
+        }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="name">名称</param>
@@ -31,7 +46,7 @@ namespace SubPubDemo
         }
 
         /// <summary>
-        /// 显示
+        /// 显示内容
         /// </summary>
         /// <param name="content">发布内容</param>
         public void ShowContent(String content)

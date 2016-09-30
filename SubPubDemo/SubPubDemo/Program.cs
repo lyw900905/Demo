@@ -24,18 +24,20 @@ namespace SubPubDemo
         {
             // 初始化
             Publisher publisher = new Publisher();
-            Subscriber subscriber1 = new Subscriber("订阅者1");
-            Subscriber subscriber2 = new Subscriber("订阅者2");
+            String subscriberName1 = "订阅者1";
+            String subscriberName2 = "订阅者2";
+            Subscriber subscriber1 = new Subscriber(subscriberName1);
+            Subscriber subscriber2 = new Subscriber(subscriberName2);
 
             // 订阅发布信息
-            publisher.Subscribe(subscriber1.ShowContent);
-            publisher.Subscribe(subscriber2.ShowContent);
+            publisher.Subscribe(subscriberName1, subscriber1.ShowContent);
+            publisher.Subscribe(subscriberName2, subscriber2.ShowContent);
 
             // 发布一条消息
             publisher.Publish("发布第一条消息");
 
             // 取消订阅者2的订阅
-            publisher.DeleteSubscribe(subscriber2.ShowContent);
+            publisher.DeleteSubscribe(subscriberName2, subscriber2.ShowContent);
 
             // 发布第二条消息
             publisher.Publish("发布第二条信息");
