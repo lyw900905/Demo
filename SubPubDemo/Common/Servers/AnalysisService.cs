@@ -15,7 +15,6 @@ using System.Collections.Generic;
 namespace Common.Servers
 {
     using Common.Entity;
-    using Common.Helper;
     using Newtonsoft.Json;
 
     /// <summary>

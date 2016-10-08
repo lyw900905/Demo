@@ -40,11 +40,6 @@ namespace ListenServer
         private static Object mInstanceLock = new Object();
 
         /// <summary>
-        /// 请求监听地址
-        /// </summary>
-        private static String mClientListenerUrl = "http://127.0.0.1:3030/";
-
-        /// <summary>
         /// 请求返回状态码
         /// </summary>
         private const Int32 mStatusCode = 200;
@@ -129,10 +124,10 @@ namespace ListenServer
             //设置回调函数
             callBack = new AsyncCallback(GetContextAsynCallback);
 
+            serverListener.Start();
+
             //开始异步传输
             serverListener.BeginGetContext(callBack, null);
-
-            serverListener.Start();
 
             Console.WriteLine("开启服务器监听：" + DateTime.Now);
         }
@@ -230,37 +225,6 @@ namespace ListenServer
 
             // 再次开启异步接收
             serverListener.BeginGetContext(callBack, null);
-        }
-
-        /// <summary>
-        /// 获取返回请求的数据
-        /// </summary>
-        private void GetResponseData()
-        {
-            // 获取数据库中用户信息
-            List<UserInfo> userInfoList = UserInfoDAL.QueryAllUserInfo();
-            String responseString = JsonConvert.SerializeObject(userInfoList);
-
-            // 发送返回请求的数据信息
-            SendRequestMessage(responseString);
-        }
-
-        /// <summary>
-        /// 发送请求信息
-        /// </summary>
-        /// <param name="responseString">String型：要发送的Json字符串</param>
-        private void SendRequestMessage(String responseString)
-        {
-            Task.Factory.StartNew(new Action(delegate
-            {
-                // 通过客户端开启监听，服务器发送数据到客户端监听地址
-                sendData = responseString;
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(mClientListenerUrl);
-                httpWebRequest.Method = "POST";
-
-                // 开始异步请求传输
-                httpWebRequest.BeginGetRequestStream(new AsyncCallback(PostCallBack), httpWebRequest);
-            }));
         }
 
         /// <summary>

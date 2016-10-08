@@ -30,7 +30,9 @@ namespace TestHttp
             InitializeComponent();
 
             // 订阅更新数据方法
-            HttpClientTest.Instance.Subscribe(SetDisplayData);
+            //HttpClientTest.Instance.Subscribe(SetDisplayData);
+
+            HttpClientTest.Instance.PublishEvent += SetDisplayData;
         }
 
         /// <summary>
@@ -96,28 +98,6 @@ namespace TestHttp
                     lstViewInfo.Items.Add(listViewItem);
                 }
             }));
-        }
-
-        /// <summary>
-        /// 开启客户端监听测试
-        /// </summary>
-        /// <param name="sender">按钮对象</param>
-        /// <param name="e">按钮对象事件参数信息</param>
-        private void btn_listener_Click(object sender, EventArgs e)
-        {
-            // 开始客户端监听
-            HttpClientTest.Instance.StartClientListener();
-        }
-
-        /// <summary>
-        /// 停止客户端监听
-        /// </summary>
-        /// <param name="sender">按钮对象</param>
-        /// <param name="e">按钮对象事件参数信息</param>
-        private void btn_Stop_Click(object sender, EventArgs e)
-        {
-            // 停止客户端监听
-            HttpClientTest.Instance.StopClientListener();
         }
     }
 }

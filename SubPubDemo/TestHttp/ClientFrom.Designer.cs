@@ -72,7 +72,7 @@
             this.btn_listener.TabIndex = 4;
             this.btn_listener.Text = "监听";
             this.btn_listener.UseVisualStyleBackColor = true;
-            this.btn_listener.Click += new System.EventHandler(this.btn_listener_Click);
+            //this.btn_listener.Click += new System.EventHandler(this.btn_listener_Click);
             // 
             // btn_Stop
             // 
@@ -82,15 +82,15 @@
             this.btn_Stop.TabIndex = 5;
             this.btn_Stop.Text = "停止";
             this.btn_Stop.UseVisualStyleBackColor = true;
-            this.btn_Stop.Click += new System.EventHandler(this.btn_Stop_Click);
+            //this.btn_Stop.Click += new System.EventHandler(this.btn_Stop_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(419, 425);
-            this.Controls.Add(this.btn_Stop);
-            this.Controls.Add(this.btn_listener);
+            //this.Controls.Add(this.btn_Stop);
+            //this.Controls.Add(this.btn_listener);
             this.Controls.Add(this.lstViewInfo);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);

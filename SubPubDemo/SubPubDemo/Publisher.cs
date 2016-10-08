@@ -18,11 +18,6 @@ namespace SubPubDemo
     public class Publisher : IPublish
     {
         /// <summary>
-        /// 定义事件
-        /// </summary>
-        private event Action<String> publishEvent;
-
-        /// <summary>
         /// 用户订阅方法列表操作锁
         /// </summary>
         private Object dictionaryLock = new Object();
@@ -46,20 +41,6 @@ namespace SubPubDemo
                     subscribeActionDictionary[subscriberName] = dealAction;
                 }
             }
-
-            //// 判断是否已经存在要订阅方法事件
-            //if (publishEvent != null && publishEvent.GetInvocationList().Length > 0)
-            //{
-            //    foreach (var action in publishEvent.GetInvocationList())
-            //    {
-            //        if (action.Equals(dealAction))
-            //        {
-            //            return;
-            //        }
-            //    }
-            //}
-
-            //publishEvent += dealAction;
         }
 
         /// <summary>
@@ -86,15 +67,12 @@ namespace SubPubDemo
         {
             // 获取订阅列表中的键值
             var keys = subscribeActionDictionary.Keys;
+
             foreach (var key in keys)
             {
+                // 通过key值来通知订阅的方法信息
                 subscribeActionDictionary[key].Invoke(message);
             }
-
-            //if (publishEvent != null)
-            //{
-            //    publishEvent(msg);
-            //}
         }
     }
 }
