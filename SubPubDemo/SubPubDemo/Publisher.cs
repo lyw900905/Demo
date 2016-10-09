@@ -25,7 +25,7 @@ namespace SubPubDemo
         /// <summary>
         /// 存储用户订阅的方法列表
         /// </summary>
-        private Dictionary<String, Action<string>> subscribeActionDictionary = new Dictionary<string, Action<string>>();
+        private Dictionary<String, Action<string>> subscribeActionDict = new Dictionary<string, Action<string>>();
 
         /// <summary>
         /// 订阅方法
@@ -36,9 +36,9 @@ namespace SubPubDemo
             lock (dictionaryLock)
             {            
                 // 判断是否已经存在订阅内容，不存在则添加
-                if (!subscribeActionDictionary.ContainsKey(subscriberName))
+                if (!subscribeActionDict.ContainsKey(subscriberName))
                 {
-                    subscribeActionDictionary[subscriberName] = dealAction;
+                    subscribeActionDict[subscriberName] = dealAction;
                 }
             }
         }
@@ -52,9 +52,9 @@ namespace SubPubDemo
             lock (dictionaryLock)
             {
                 // 判断是否存在要取消订阅的事件方法，存在则取消事件
-                if (subscribeActionDictionary.ContainsKey(subscriberName))
+                if (subscribeActionDict.ContainsKey(subscriberName))
                 {
-                    subscribeActionDictionary.Remove(subscriberName);
+                    subscribeActionDict.Remove(subscriberName);
                 }
             }
         }
@@ -66,12 +66,12 @@ namespace SubPubDemo
         public void Publish(String message)
         {
             // 获取订阅列表中的键值
-            var keys = subscribeActionDictionary.Keys;
+            var keys = subscribeActionDict.Keys;
 
             foreach (var key in keys)
             {
                 // 通过key值来通知订阅的方法信息
-                subscribeActionDictionary[key].Invoke(message);
+                subscribeActionDict[key].Invoke(message);
             }
         }
     }

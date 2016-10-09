@@ -17,7 +17,7 @@ namespace Common.Helper
     /// <summary>
     /// json序列化帮助类(未使用，现采用Newtonsoft.Json.dll提供的序列化方法)
     /// </summary>
-    public class JSonHelper
+    public class JsonHelper
     {
         /// <summary>
         /// 序列化

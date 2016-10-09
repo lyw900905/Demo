@@ -40,14 +40,14 @@ namespace ListenServer
         private static Object mInstanceLock = new Object();
 
         /// <summary>
-        /// 请求返回状态码
-        /// </summary>
-        private const Int32 mStatusCode = 200;
-
-        /// <summary>
         /// 传输数据编码
         /// </summary>
         private static Encoding mEncoding = Encoding.UTF8;
+
+        /// <summary>
+        /// 请求返回状态码
+        /// </summary>
+        private const Int32 mStatusCode = 200;
 
         #endregion
 

@@ -28,11 +28,11 @@ namespace Common.Servers
             // UserInfo 用户名采用“用户名”+ Guid前四位
             // 用户积分采用1到150内的随机数
             UserInfo userInfo = new UserInfo();
-            
+
             // “用户名”数据填充
-            String guidString = String.Empty; 
+            String guidString = String.Empty;
             guidString = Guid.NewGuid().ToString("N");
-            userInfo.UserName = "用户名" + guidString.Substring(0, 4);
+            userInfo.UserName = String.Format("{0},{1}", "用户名", guidString.Substring(0, 4));
 
             // 生成用户随机积分
             Random random = new Random();

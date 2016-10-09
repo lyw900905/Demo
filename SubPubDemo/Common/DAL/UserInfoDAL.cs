@@ -29,7 +29,7 @@ namespace Common.DAL
         public static List<UserInfo> QueryAllUserInfo()
         {
             List<UserInfo> userInfoList = new List<UserInfo>();
-            String sqlString = "select * from UserInfo ORDER BY UserIntegral DESC LIMIT 20";
+            String sqlString = "SELECT * FROM UserInfo ORDER BY UserIntegral DESC LIMIT 20";
 
             // 数据获取
             DataTable dataTable = MySQLHelper.GetDataTable(sqlString);
@@ -62,7 +62,7 @@ namespace Common.DAL
             Object obj = null;
 
             // Sql指令组织
-            String sqlString = "Insert into UserInfo(UserName,UserIntegral) values(@UserName, @UserIntegral);select @@identity;";
+            String sqlString = "INSERT INTO UserInfo(UserName,UserIntegral) VALUES(@UserName, @UserIntegral);SELECT @@identity;";
             MySqlParameter[] para = new MySqlParameter[]
             {
                 new MySqlParameter("@UserName",userInfo.UserName),
